@@ -43,7 +43,7 @@ if (isset($_POST['page'])) {
             foreach ($filteredProducts as $product) {
                 ?>
                 <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card overflow-hidden">
+                    <div class="card overflow-hidden h-100">
                         <div class="bg-image overflow-hidden d-flex">
                             <a href="/shop/product?id=<?= $product->id ?>" class="flex-grow-1 d-flex justify-content-center">
                                 <img src="../../images/<?= $product->image ?>"
@@ -72,7 +72,7 @@ if (isset($_POST['page'])) {
         ?>
     </div>
 
-    <?php echo $pagination->createLinks(); ?>
+    <?= $pagination->createLinks(); ?>
 <?php
 }
 ?>

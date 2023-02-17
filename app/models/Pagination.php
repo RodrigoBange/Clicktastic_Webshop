@@ -11,7 +11,7 @@ class Pagination
     var $nextLink = '&gt;';
     var $prevLink = '&lt;';
     var $lastLink = 'Last &rsaquo;';
-    var $fullTagOpen = '<div class="pagination">';
+    var $fullTagOpen = '<div class="pagination d-flex align-items-center">';
     var $fullTagClose = '</div>';
     var $firstTagOpen = '';
     var $firstTagClose = '&nbsp;';
@@ -27,7 +27,6 @@ class Pagination
     var $numTagClose = '';
     var $anchorClass = '';
     var $showCount = true;
-    var $currentOffset = 0;
     var $contentDiv = '';
     var $additionalParam = '';
     var $link_func = '';
@@ -67,7 +66,7 @@ class Pagination
         // If there is only 1 page, don't continue.
         if ($numPages == 1) {
             if ($this->showCount) {
-                return '<p>Showing : ' . $this->totalRows.'</p>';
+                return '<p>Showing : ' . $this->totalRows . ' products</p>';
             } else {
                 return '';
             }
@@ -172,11 +171,9 @@ class Pagination
             $linkClick = 'onclick="' . $this->link_func . '(' . $pageCount . ')"';
         } else {
             $this->additionalParam = "{'page' : $pageCount}";
-            //$linkClick="onclick=\"$.post('". $this->baseURL ."', ". $this->additionalParam .",function(data){
-            //                $('#". $this->contentDiv. "').html(data); }); return false;\"";
-            //$linkClick="onclick=searchFilter(5)";
         }
 
-        return "<a href=\"javascript:void(0);\" " . $this->anchorClass . " " . $linkClick . ">" . $text . '</a>';
+        return "<a href=\"javascript:void(0);\" class='btn btn-theme text-white'" . $this->anchorClass . " "
+            . $linkClick . ">" . $text . '</a>';
     }
 }

@@ -8,7 +8,7 @@ class Product
     public $price;
     public string $company;
     public string $size;
-    public int $amountKeys;
+    public int $amountkeys;
     public string $layout;
     public string $backlit;
     public bool $hotswap;

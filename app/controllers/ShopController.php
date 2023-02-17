@@ -1,10 +1,10 @@
 <?php
 // Service
-require_once(__DIR__ . "/../services/ProductService.php");
+require_once(__DIR__ . '/../services/ProductService.php');
 
 // Model
-require_once(__DIR__ . "/../models/Pagination.php");
-require_once(__DIR__ . "/../models/NavbarFunctions.php");
+require_once(__DIR__ . '/../models/Pagination.php');
+require_once(__DIR__ . '/../models/NavbarFunctions.php');
 
 
 class ShopController
@@ -25,7 +25,7 @@ class ShopController
     public function products(): void
     {
         // Set up Pagination settings
-        $baseURL = __DIR__ . "/../views/shop/getdata.php";
+        $baseURL = __DIR__ . '/../views/shop/getdata.php';
         // Get product count for row count
         $rowCount = $this->productService->getProductCount(null, null);
         $limit = 6;
@@ -46,7 +46,7 @@ class ShopController
         $navFunc = $this->navFunc;
 
         // Load the view
-        require_once(__DIR__ . "/../views/shop/products.php");
+        require_once(__DIR__ . '/../views/shop/products.php');
     }
 
     /**
@@ -54,16 +54,21 @@ class ShopController
      */
     public function product(): void
     {
-        // Service
-        $productService = $this->productService;
+        if (isset($_GET['id'])) {
+            // Get product to display
+            $product = $this->productService->getProductById($_GET['id']);
+        } else {
+            $product = null;
+        }
 
-        $products = $this->productService->getNewestProducts();
+        // Get the newest products to display
+        $newestProducts = $this->productService->getNewestProducts();
 
         // Navigation functions
         $navFunc = $this->navFunc;
 
         // Load the view
-        require_once(__DIR__ . "/../views/shop/product.php");
+        require_once(__DIR__ . '/../views/shop/product.php');
     }
 
     /**
@@ -74,6 +79,6 @@ class ShopController
         // Service
         $productService = $this->productService;
 
-        require_once(__DIR__ . "/../views/shop/getdata.php");
+        require_once(__DIR__ . '/../views/shop/getdata.php');
     }
 }

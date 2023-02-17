@@ -1,28 +1,17 @@
 <?php
+// Repository
+require_once(__DIR__ . '/Repository.php');
 // Model
-require(__DIR__ . "/../models/User.php");
+require_once(__DIR__ . '/../models/User.php');
 
-class UserRepository
+class UserRepository extends Repository
 {
-    private $connection;
-
-    public function __construct()
-    {
-        try {
-            require(__DIR__ . "/../config/dbconfig.php");
-            $this->connection = new PDO("mysql:host=$db_host;dbname=$db_name", $db_username, $db_password);
-        } catch (Exception $e) {
-            error_log($e->getMessage());
-            throw $e;
-        }
-    }
-
     public function getAll() : ?array
     {
         try {
             $stmt = $this->connection->prepare("SELECT * FROM users");
             $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_CLASS, "User");
+            $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
             return $stmt->fetchAll();
         } catch (PDOException $e) {
             echo $e->getMessage();
@@ -37,7 +26,7 @@ class UserRepository
             $stmt = $this->connection->prepare("SELECT * FROM users WHERE email= :email");
             $stmt->bindParam(':email', $email);
             $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_CLASS, "User");
+            $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
             return $stmt->fetch();
         } catch (PDOException $e) {
             error_log($e->getMessage());
@@ -112,8 +101,8 @@ class UserRepository
     {
         try {
             $stmt = $this->connection->prepare("UPDATE users SET 'password' = :password WHERE email= :email");
-            $stmt->bindParam(":password", $password);
-            $stmt->bindParam(":email", $email);
+            $stmt->bindParam(':password', $password);
+            $stmt->bindParam(':email', $email);
             $stmt->execute();
             return true;
         } catch (PDOException $e) {

@@ -4,7 +4,7 @@ require(__DIR__ . '/../repositories/ProductRepository.php');
 
 class ProductService
 {
-    private $productRepository;
+    private ProductRepository $productRepository;
 
     public function __construct()
     {
@@ -34,7 +34,7 @@ class ProductService
     /**
      * Retrieves all products.
      */
-    public function getAllProducts()
+    public function getAllProducts(): ?array
     {
         $products = $this->productRepository->getAllProducts();
 
@@ -85,7 +85,7 @@ class ProductService
     /**
      * Retrieves all products within limit.
      */
-    public function getProductsByLimit($limit)
+    public function getProductsByLimit($limit): ?array
     {
         $products = $this->productRepository->getProductsByLimit($limit);
 
@@ -116,7 +116,7 @@ class ProductService
         return null;
     }
 
-    public function getNewestProducts()
+    public function getNewestProducts(): ?array
     {
         $products = $this->productRepository->getNewestProducts();
 
@@ -141,7 +141,7 @@ class ProductService
         return $cartProducts;
     }
 
-    public function getSubtotalPrice()
+    public function getSubtotalPrice(): float|int
     {
         $subtotal = 0;
 
@@ -158,5 +158,22 @@ class ProductService
     public function getProductsOfOrder($id): array|null
     {
         return $this->productRepository->getProductsOfOrder($id);
+    }
+
+    public function getTitleProduct()
+    {
+        if (isset($_GET['id'])) {
+            try {
+                $product = $productService->getProductById($_GET['id']);
+
+                if ($product != null) {
+                    echo $product->name;
+                } else {
+                    echo "Product not found.";
+                }
+            } catch (Exception $e) {
+                echo "Product not found.";
+            }
+        }
     }
 }
