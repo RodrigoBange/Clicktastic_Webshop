@@ -1,0 +1,46 @@
+.bg-theme {
+    background-color: rgb(18, 157, 161);
+}
+
+.bg-theme-dark {
+    background-color: rgb(21, 99, 100);
+}
+
+.btn-theme {
+    background-color: rgb(18, 157, 161);
+}
+
+.btn-theme:hover {
+    background-color: rgb(21, 99, 100);
+}
+
+.btn:disabled {
+    background-color: rgb(21, 99, 100);
+}
+
+.nav-link {
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    opacity: 0;
+    transition: all 0.2s;
+    height: 2px;
+    width: 100%;
+    background-color: rgb(18, 157, 161);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.nav-link:hover::after {
+    opacity: 1;
+}
+
+.hover-zoom {
+    transition: all 0.4s;
+}
+.hover-zoom:hover {
+    transform: scale(1.15);
+}
