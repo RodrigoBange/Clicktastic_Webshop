@@ -6,7 +6,7 @@
                     <h6 class="text-uppercase fw-bold mb-4">
                         <i class="fa fa-keyboard-o me-3 text-secondary"></i>Clicktastic
                     </h6>
-                    <p>Your favorite keyboards in one place.</p>
+                    <p>Your favourite keyboards in one place.</p>
                 </div>
                 <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
                     <h6 class="text-uppercase fw-bold mb-4">LINKS</h6>

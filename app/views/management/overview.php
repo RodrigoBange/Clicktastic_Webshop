@@ -23,7 +23,7 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['is_admin']) {
                 <?php
                 foreach ($orders as $order) {
                     ?>
-                    <h4 class="mb-3">Order #<?= htmlspecialchars($order->id); ?></h4>
+                    <h4 class="mb-3">Order #<?= htmlspecialchars($order->id) ?></h4>
                     <div class="row">
                         <div class="col-md-2 mb-3">
                             <label for="firstName">Order placed</label>
@@ -34,12 +34,11 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['is_admin']) {
                         </div>
                         <div class="col-md-2 mb-3">
                             <label for="lastName">Total</label>
-                            <h6><strong>&euro;<?php echo htmlspecialchars($order->total) ?></strong></h6>
+                            <h6><strong>&euro;<?= htmlspecialchars($order->total) ?></strong></h6>
                         </div>
                         <div class="col-md-2 mb-3">
                             <label for="lastName">Shipped to</label>
-                            <h6><strong><?php
-                                    echo htmlspecialchars($order->address) . " " .
+                            <h6><strong><?= htmlspecialchars($order->address) . " " .
                                         htmlspecialchars($order->address_optional)
                                     ?></strong></h6>
                         </div>
@@ -51,15 +50,15 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['is_admin']) {
                         foreach ($order->products as $product) {
                             foreach ($product as $item) {
                                 ?>
-                                <a href="/shop/product?id=<?php echo htmlspecialchars($item->id) ?>"
+                                <a href="/shop/product?id=<?= htmlspecialchars($item->id) ?>"
                                    class="list-group-item d-flex lh-condensed text-decoration-none mb-3">
                                     <img class="w-25 border"
-                                         src="../../images/<?php echo htmlspecialchars($item->image) ?>" alt="keyboard">
+                                         src="../../images/<?= htmlspecialchars($item->image) ?>" alt="keyboard">
                                     <div class="col-sm-5 col-1 p-4 pt-0">
-                                        <h5><strong><?php echo htmlspecialchars($item->name) ?></strong></h5>
-                                        <h6>&euro;<?php echo htmlspecialchars($item->price) ?></h6>
+                                        <h5><strong><?= htmlspecialchars($item->name) ?></strong></h5>
+                                        <h6>&euro;<?= htmlspecialchars($item->price) ?></h6>
                                         <small class="col-sm-2 col-12">Quantity:
-                                            <?php echo htmlspecialchars($item->quantity) ?></small>
+                                            <?= htmlspecialchars($item->quantity) ?></small>
                                     </div>
                                 </a>
                                 <?php
