@@ -8,7 +8,7 @@
 <html lang="en">
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
-    <title>Create an account.</title>
+    <title>Log in.</title>
     <script>
         $(document).ready(function() {
             $('#loginForm').submit(function(e) {

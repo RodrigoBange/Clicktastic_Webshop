@@ -176,4 +176,70 @@ class ProductService
             }
         }
     }
+
+    public function getFilteredProducts()
+    {
+        if (isset($_POST['page'])) {
+            // Configuration
+            $offset = !empty($_POST['page'])?$_POST['page'] : 0;
+            $limit = 6;
+            $keywords = array();
+            $filters = array();
+
+            // Search conditions
+            if (!empty($_POST['keywords'])) {
+                // Filter and explode sentence
+                $keywordsList = htmlspecialchars($_POST['keywords']);
+                $keywordsList = trim($keywordsList);
+                $keywords = preg_split('/\s+/', $keywordsList);
+
+                // Literal string
+                foreach ($keywords as $keyword => $value) {
+                    $keywords[$keyword] = "%" . $value . "%";
+                }
+            }
+
+            // Fetch records based on the offset and limit
+            return $this->getProductsByOffsetLimit($keywords, $filters, $offset, $limit);
+        }
+    }
+
+    public function getFilterPagination()
+    {
+        if (isset($_POST['page'])) {
+            // Configuration
+            $baseURL = __DIR__ . "/../views/shop/getproducts.php";
+            $offset = !empty($_POST['page'])?$_POST['page'] : 0;
+            $limit = 6;
+            $keywords = array();
+            $filters = array();
+
+            // Search conditions
+            if (!empty($_POST['keywords'])) {
+                // Filter and explode sentence
+                $keywordsList = htmlspecialchars($_POST['keywords']);
+                $keywordsList = trim($keywordsList);
+                $keywords = preg_split('/\s+/', $keywordsList);
+
+                // Literal string
+                foreach ($keywords as $keyword => $value) {
+                    $keywords[$keyword] = "%" . $value . "%";
+                }
+            }
+
+            // Count all records
+            $rowCount = $this->getProductCount($keywords, $filters);
+
+            // Initialize Pagination class
+            $pagConfig = array(
+                'baseURL' => $baseURL,
+                'totalRows' => $rowCount,
+                'perPage' => $limit,
+                'currentPage' => $offset,
+                'contentDiv' => 'dataContainer',
+                'link_func' => 'searchFilter'
+            );
+            return new Pagination($pagConfig);
+        }
+    }
 }

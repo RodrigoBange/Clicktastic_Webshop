@@ -3,26 +3,7 @@
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Clicktastic, your favourite keyboards in one place.</title>
-    <script>
-        function addProduct($button_id) {
-            // Get numbers of button ID
-            var $id = $button_id.match(/\d/g).join("");
-            var $price = document.getElementById("price-" + $id).innerText.replace('€', '').replace('&euro;', '');
-            var $quantity = 1;
-            var $cartcount = document.getElementById("cartcount");
-
-            $.ajax({
-                url: '/cart/addtocart',
-                data: {product_id : $id, product_quantity : $quantity, product_price : $price},
-                success: function(reply) {
-                    $cartcount.textContent = reply;
-                },
-                error: function(req, status, error) {
-                    console.log( 'Something went wrong: ', status, error, req );
-                }
-            });
-        }
-    </script>
+    <script type="text/javascript" src="../../js/addproduct.js"></script>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -58,7 +39,7 @@
                         </a>
                         <p class="opacity-75 badge bg-theme"><?= htmlspecialchars($product->company) ?></p>
                         <h6 class="mb-3" id="price-<?= $product->id ?>">&euro;<?= htmlspecialchars($product->price) ?></h6>
-                        <button type="button" id="btn-add-<?= $product->id ?>" onclick="addProduct(this.id)"
+                        <button type="button" id="btn-add-<?= $product->id ?>" onclick="addProduct(this.id);"
                                 class="btn btn-theme text-white">Add To Cart</button>
                         <a href="/shop/product?id=<?= $product->id ?>" class="btn btn-theme text-white">
                             More Info</a>

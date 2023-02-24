@@ -10,76 +10,10 @@
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Checkout</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
-    <script>
-        function toggleShipping($checkbox) {
-            $shippingForm = document.getElementById("shipping-diff");
-
-            if ($checkbox.checked) { // Hide extra form
-                if (!$shippingForm.classList.contains("collapse")) {
-                    $shippingForm.classList.add("collapse");
-
-                    // Disable elements required
-                    document.getElementById("firstNameShip").disabled = true;
-                    document.getElementById("lastNameShip").disabled = true;
-                    document.getElementById("addressShip").disabled = true;
-                    document.getElementById("citytownShip").disabled = true;
-                    document.getElementById("countryShip").disabled = true;
-                    document.getElementById("stateprovinceShip").disabled = true;
-                    document.getElementById("zipShip").disabled = true;
-
-                }
-            } else { // Display extra form
-                if ($shippingForm.classList.contains("collapse")) {
-                    $shippingForm.classList.remove("collapse");
-
-                    // Disable elements required
-                    document.getElementById("firstNameShip").disabled = false;
-                    document.getElementById("lastNameShip").disabled = false;
-                    document.getElementById("addressShip").disabled = false;
-                    document.getElementById("citytownShip").disabled = false;
-                    document.getElementById("countryShip").disabled = false;
-                    document.getElementById("stateprovinceShip").disabled = false;
-                    document.getElementById("zipShip").disabled = false;
-                }
-            }
-        }
-    </script>
-    <script>
-        function togglePayPal($radioButton) {
-            $ccField = document.getElementById("ccField");
-            $paypalField = document.getElementById("paypalField");
-
-            if ($radioButton.id === "paypal" && $radioButton.checked) { // Display PayPal field
-                if ($paypalField.classList.contains("collapse")) {
-                    $paypalField.classList.remove("collapse");
-                    $ccField.classList.add("collapse");
-
-                    // Disable elements required
-                    document.getElementById("cc-name").disabled = true;
-                    document.getElementById("cc-number").disabled = true;
-                    document.getElementById("cc-expiration").disabled = true;
-                    document.getElementById("cc-cvv").disabled = true;
-
-                    // Enable elements required
-                    document.getElementById("paypal-email").disabled = false;
-                }
-            } else { // Display credit/debit fields
-                if (!$paypalField.classList.contains("collapse")) {
-                    $paypalField.classList.add("collapse");
-                    $ccField.classList.remove("collapse");
-
-                    // Disable elements required
-                    document.getElementById("paypal-email").disabled = true;
-
-                    // Enable elements required
-                    document.getElementById("cc-name").disabled = false;
-                    document.getElementById("cc-number").disabled = false;
-                    document.getElementById("cc-expiration").disabled = false;
-                    document.getElementById("cc-cvv").disabled = false;
-                }
-            }
-        }
-    </script>
+    <script type="text/javascript" src="../../toggle_checkout_options.js"></script>
+    <script type="text/javascript" src="../../cleave_settings.js"></script>
+    <script type="text/javascript" src="../../js/address_autocomplete.js"></script>
+    <script type="text/javascript" src="../../js/get_user_country.js" defer></script>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -335,46 +269,5 @@
     </div>
 </main>
 <?php include_once(__DIR__ . '/../footer.php'); ?>
-<script type="text/javascript" src="../../js/address_autocomplete.js"></script>
-<script>
-    var creditCleave = new Cleave('#cc-number', {
-        creditCard: true,
-        onCreditCardTypeChanged: function(type) {
-        }
-    });
-
-    var expCleave = new Cleave('#cc-expiration', {
-        date: true,
-        datePattern: ['m', 'y']
-    });
-
-    var cvvCleave = new Cleave('#cc-cvv', {
-        blocks: [3],
-        uppercase: true
-    });
-</script>
-<Script type="text/javascript" defer>
-    <?php
-    if (isset($user->country)) {
-    ?>
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    async function timer() {
-        await sleep(1000);
-        setDefaultCountry();
-    }
-
-    function setDefaultCountry() {
-        var country = "<?php echo htmlspecialchars($user->country) ?>";
-        $('#country').val(country);
-    }
-
-    timer();
-    <?php
-    }
-    ?>
-</Script>
 </body>
 </html>

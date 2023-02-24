@@ -3,6 +3,7 @@
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Create an account.</title>
+    <script type="text/javascript" defer src="../../js/register_user.js"></script>
     <script>
         $(document).ready(function() {
             $('#registerForm').submit(function(e) {
@@ -119,6 +120,5 @@
     </div>
 </section>
 <?php include_once(__DIR__ . '/../footer.php'); ?>
-<script type="text/javascript" defer src="../../js/register_user.js"></script>
 </body>
 </html>

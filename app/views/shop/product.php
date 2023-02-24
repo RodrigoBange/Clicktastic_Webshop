@@ -11,31 +11,7 @@
         }
         ?>
     </title>
-    <script>
-        function addProduct($button_id) {
-            // Get numbers of button ID
-            var $id = $button_id.match(/\d/g).join("");
-            var $price = document.getElementById("price").innerText.replace('€', '').replace('&euro;', '');
-            var $quantity = document.getElementById("inputQuantity").value;
-            var $cartcount = document.getElementById("cartcount");
-
-            $.ajax({
-                url: '/cart/addtocart',
-                data: {product_id : $id, product_quantity : $quantity, product_price : $price},
-                success: function(reply) {
-                    $cartcount.textContent = reply;
-
-                    // In case of input abuse
-                    if ($quantity > 10) {
-                        document.getElementById("inputQuantity").value = 10;
-                    }
-                },
-                error: function(req, status, error) {
-                    console.log( 'Something went wrong: ', status, error, req );
-                }
-            });
-        }
-    </script>
+    <script type="text/javascript" src="../../js/addproduct.js"></script>
 </head>
 <body class="bg-light">
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -58,7 +34,7 @@
                     <input class="form-control text-center me-3" id="inputQuantity" type="number"
                            value="1" min="1" max="10" style="max-width: 5rem" required>
                     <button class="btn btn-theme text-white flex-shrink-0" type="button"
-                            id="btn-add-<?= $product->id ?>" onclick="addProduct(this.id)">
+                            id="btn-add-<?= $product->id ?>" onclick="addProductWithQuantity(this.id)">
                         <i class="fa fa-shopping-cart"></i>
                         Add to cart
                     </button>

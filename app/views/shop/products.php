@@ -3,42 +3,8 @@
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Keyboards to satisfy your typing needs.</title>
-    <script>
-        // Custom function to handle search and filter operations
-        function searchFilter(page_num) {
-            page_num = page_num ? page_num : 0;
-            var keywords = $('#keywords').val();
-            var filterBy = $('#filterBy').val();
-
-            $.ajax({
-                type: 'POST',
-                url: '/shop/getData',
-                data: 'page=' + page_num + '&keywords=' + keywords + '&filerBy=' + filterBy,
-                success: function (html) {
-                    $('#dataContainer').html(html);
-                }
-            });
-        }
-
-        function addProduct($button_id) {
-            // Get numbers of button ID
-            var $id = $button_id.match(/\d/g).join("");
-            var $price = document.getElementById("price-" + $id).innerText.replace('€', '').replace('&euro;', '');
-            var $quantity = 1;
-            var $cartcount = document.getElementById("cartcount");
-
-            $.ajax({
-                url: '/cart/addtocart',
-                data: {product_id : $id, product_quantity : $quantity, product_price : $price},
-                success: function(reply) {
-                    $cartcount.textContent = reply;
-                },
-                error: function(req, status, error) {
-                    console.log( 'Something went wrong: ', status, error, req );
-                }
-            });
-        }
-    </script>
+    <script defer type="text/javascript" src="../../js/filterproducts.js"></script>
+    <script type="text/javascript" src="../../js/addproduct.js"></script>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -53,8 +19,7 @@
         <div class="search-panel">
             <div class="form-row">
                 <div class="form-group col-md-6 mt-4">
-                    <input type="text" class="form-control" id="keywords" placeholder="Type keywords..."
-                           onkeyup="searchFilter();">
+                    <input type="text" class="form-control" id="keywords" placeholder="Type keywords...">
                 </div>
             </div>
         </div>

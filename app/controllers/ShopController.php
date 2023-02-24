@@ -6,7 +6,6 @@ require_once(__DIR__ . '/../services/ProductService.php');
 require_once(__DIR__ . '/../models/Pagination.php');
 require_once(__DIR__ . '/../models/NavbarFunctions.php');
 
-
 class ShopController
 {
     private $productService;
@@ -25,7 +24,7 @@ class ShopController
     public function products(): void
     {
         // Set up Pagination settings
-        $baseURL = __DIR__ . '/../views/shop/getdata.php';
+        $baseURL = __DIR__ . '/../views/shop/getproducts.php';
         // Get product count for row count
         $rowCount = $this->productService->getProductCount(null, null);
         $limit = 6;
@@ -74,11 +73,14 @@ class ShopController
     /**
      * AJAX page, loads products by search and filter data
      */
-    public function getData(): void
+    public function getproducts(): void
     {
-        // Service
-        $productService = $this->productService;
+        // Get filtered products
+        $filteredProducts = $this->productService->getFilteredProducts();
 
-        require_once(__DIR__ . '/../views/shop/getdata.php');
+        // Get pagination
+        $pagination = $this->productService->getFilterPagination();
+
+        require_once(__DIR__ . '/../views/shop/getproducts.php');
     }
 }

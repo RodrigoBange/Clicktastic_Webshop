@@ -87,4 +87,14 @@ class AccountController
         // Load the view
         require_once(__DIR__ . "/../views/account/logout.php");
     }
+
+    public function getcountry(): void {
+        // Get user
+        $user = $this->userService->getUser($_SESSION['email']);
+        if (isset($user->country)) {
+            echo json_encode(htmlspecialchars($user->country));
+        } else {
+            echo null;
+        }
+    }
 }

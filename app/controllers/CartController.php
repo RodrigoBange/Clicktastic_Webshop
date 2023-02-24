@@ -1,14 +1,16 @@
 <?php
 // Service
-require_once(__DIR__ . "/../services/ProductService.php");
-require_once(__DIR__ . "/../services/UserService.php");
-require_once(__DIR__ . "/../services/OrderService.php");
+require_once(__DIR__ . '/../services/CartService.php');
+require_once(__DIR__ . '/../services/ProductService.php');
+require_once(__DIR__ . '/../services/UserService.php');
+require_once(__DIR__ . '/../services/OrderService.php');
 
 // Model
-require_once(__DIR__ . "/../models/NavbarFunctions.php");
+require_once(__DIR__ . '/../models/NavbarFunctions.php');
 
 class CartController
 {
+    private CartService $cartService;
     private ProductService $productService;
     private UserService $userService;
     private OrderService $orderService;
@@ -17,6 +19,7 @@ class CartController
     public function __construct()
     {
         // Initialize
+        $this->cartService = new CartService();
         $this->productService = new ProductService();
         $this->userService = new UserService();
         $this->orderService = new OrderService();
@@ -72,26 +75,17 @@ class CartController
 
     public function addtocart() : void
     {
-        // Service
-        $productService = $this->productService;
+        // Add product to cart
+        $this->cartService->addToCart();
 
-        // Navigation functions
-        $navFunc = $this->navFunc;
-
-        // Load the view
-        require_once(__DIR__ . "/../views/cart/addtocart.php");
+        // Echo new count
+        echo $this->navFunc->getCount();
     }
 
     public function editcart() : void
     {
-        // Service
-        $productService = $this->productService;
-
-        // Navigation functions
-        $navFunc = $this->navFunc;
-
-        // Load the view
-        require_once(__DIR__ . "/../views/cart/editcart.php");
+        // Update cart
+        $this->cartService->editCart($this->navFunc, $this->productService);
     }
 
     public function processpurchase() : void
