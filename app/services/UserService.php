@@ -14,29 +14,65 @@ class UserService
     /**
      * Attempts to log in the user and returns a bool.
      */
-    public function loginUser($email, $password) : bool
+    public function loginUser(): bool
     {
-        // Get user information
-        $user = $this->userRepository->getUser($email);
+        if (isset($_POST['email']) && isset($_POST['password'])) {
+            // Get user information
+            $user = $this->userRepository->getUser($_POST['email']);
 
-        if ($user != null) { // Attempt to log user in
-            if (password_verify($password, $user->password)) {
-                // Save values to session
-                $_SESSION['logged_in'] = true;
-                $_SESSION['name'] = $user->first_name;
-                $_SESSION['email'] = $user->email;
-                $_SESSION['is_admin'] = $user->is_admin;
-                return true;
-            } else {
-                return false;
+            if ($user != null) { // Attempt to log user in
+                if (password_verify($_POST['password'], $user->password)) {
+                    // Save user to session
+                    $_SESSION['user'] = serialize($user);
+                    // Set quick access values
+                    $_SESSION['display_name'] = $user->first_name;
+                    $_SESSION['is_admin'] = $user->is_admin;
+
+                    // Save values to session
+                    //$_SESSION['logged_in'] = true;
+                    //$_SESSION['name'] = $user->first_name;
+                    //$_SESSION['email'] = $user->email;
+                    //$_SESSION['is_admin'] = $user->is_admin;
+                    return true;
+                }
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
-    // Attempts to register a new user.
-    public function registerUser($email, $firstname, $lastname, $password) : bool
+    /**
+     * Attempts to sign up a new user
+     */
+    public function signupUser(): array
+    {
+        // Variables to return
+        $registerSuccess = 0;
+        $emailExists = 0;
+
+        if (isset($_POST['email']) && isset($_POST['firstname'])
+            && isset($_POST['lastname']) && isset($_POST['password'])) {
+            // Check if user email does not exist already
+            if (!$this->userExists($_POST['email'])) {
+                // Register user
+                $registerSuccess = (int)$this->registerUser($_POST['email'], $_POST['firstname'],
+                                                            $_POST['lastname'], $_POST['password']);
+            } else {
+                // Email already exists
+                $emailExists = 1;
+            }
+        }
+
+        // Return results
+        return array(
+            "registerSuccess" => $registerSuccess,
+            "emailExists" => $emailExists
+        );
+    }
+
+    /**
+     * Registers a new user to the database
+     */
+    public function registerUser($email, $firstname, $lastname, $password): bool
     {
         // Hash password
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -52,6 +88,15 @@ class UserService
         } else { // Update information of customer to have a password
             return $this->userRepository->addPassword($password, $email);
         }
+    }
+
+    /**
+     * Logs out the user and unsets the session
+     */
+    public function logoutUser(): void
+    {
+        session_unset();
+        header('Location: /login/login');
     }
 
     /**

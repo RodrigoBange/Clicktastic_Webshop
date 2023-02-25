@@ -9,34 +9,7 @@
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Log in.</title>
-    <script>
-        $(document).ready(function() {
-            $('#loginForm').submit(function(e) {
-                e.preventDefault()
-
-                $.ajax({
-                    url: '/login/loginuser',
-                    data: $(this).serialize(),
-                    dataType: "json",
-                    method: 'POST',
-                    success: function(reply) {
-                        var $warning;
-                        if (reply) {
-                            window.location.assign("/shop/products");
-                        } else {
-                            $warning = $('#warning');
-                            if (warning.classList.contains('collapse')) {
-                                warning.classList.remove('collapse');
-                            }
-                        }
-                    },
-                    error: function(req, status, error) {
-                        console.log( 'Something went wrong: ', status, error, req );
-                    }
-                });
-            });
-        });
-    </script>
+    <script type="text/javascript" src="../../js/login_user.js"></script>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>

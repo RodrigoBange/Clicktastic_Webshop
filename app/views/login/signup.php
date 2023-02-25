@@ -3,28 +3,7 @@
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Create an account.</title>
-    <script type="text/javascript" defer src="../../js/register_user.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#registerForm').submit(function(e) {
-                e.preventDefault()
-
-                $.ajax({
-                    url: '/login/registeruser',
-                    data: $(this).serialize(),
-                    dataType: "json",
-                    method: 'POST',
-                    success: function(reply) {
-                        displayRegisterModal(reply.registerSuccess, reply.emailExists);
-                    },
-                    error: function(req, status, error) {
-                        displayRegisterModal(false, false);
-                        console.log( 'Something went wrong: ', status, error, req );
-                    }
-                });
-            });
-        });
-    </script>
+    <script type="text/javascript" src="../../js/signup_user.js" defer></script>
 </head>
 <body>
 <div class="modal fade in" id="modal" role="dialog">

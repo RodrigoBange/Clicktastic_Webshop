@@ -5,7 +5,7 @@ require_once(__DIR__ . '/../services/ProductService.php');
 require_once(__DIR__ . '/../services/OrderService.php');
 
 // Models
-require_once(__DIR__ . "/../models/NavbarFunctions.php");
+require_once(__DIR__ . '/../models/NavbarFunctions.php');
 
 class AccountController
 {
@@ -25,8 +25,14 @@ class AccountController
 
     public function account() : void
     {
-        // Get user information
-        $user = $this->userService->getUser($_SESSION['email']);
+        // If user is not logged in, direct to login page
+        if (!isset($_SESSION['user'])) {
+            header("location: /login/login");
+            return;
+        }
+
+        // Deserialize to object
+        $user = unserialize($_SESSION['user']);
 
         // Navigation Functions
         $navFunc = $this->navFunc;
@@ -37,8 +43,14 @@ class AccountController
 
     public function editaccount() : void
     {
-        // Get user information
-        $user = $this->userService->getUser($_SESSION['email']);
+        // If user is not logged in, direct to login page
+        if (!isset($_SESSION['user'])) {
+            header("location: /login/login");
+            return;
+        }
+
+        // Deserialize to object
+        $user = unserialize($_SESSION['user']);
 
         // Navigation Functions
         $navFunc = $this->navFunc;
@@ -81,11 +93,6 @@ class AccountController
 
         // Load the view
         require_once(__DIR__ . "/../views/account/orders.php");
-    }
-
-    public function logout() : void {
-        // Load the view
-        require_once(__DIR__ . "/../views/account/logout.php");
     }
 
     public function getcountry(): void {

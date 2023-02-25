@@ -1,15 +1,11 @@
-<?php
-if (!isset($_SESSION['logged_in'])) {
-    header("location: /login/login");
-    exit();
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Checkout</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
+    <script type="text/javascript" src="../../js/address_autocomplete.js"></script>
+    <script type="text/javascript" src="../../js/get_user_country.js" defer></script>
     <script>
         $(document).ready(function() {
             $('#updateForm').submit(function (e) {
@@ -21,11 +17,10 @@ if (!isset($_SESSION['logged_in'])) {
                     dataType: "json",
                     method: 'POST',
                     success: function (reply) {
-                        var $warning;
                         if (reply) {
                             window.location.assign("/account/account");
                         } else {
-                            $warning = $('#warning');
+                            var warning = $('#warning');
                             if (warning.classList.contains('collapse')) {
                                 warning.classList.remove('collapse');
                             }
@@ -151,29 +146,5 @@ if (!isset($_SESSION['logged_in'])) {
     </div>
 </main>
 <?php include_once(__DIR__ . '/../footer.php'); ?>
-<script type="text/javascript" src="../../js/address_autocomplete.js"></script>
-<Script type="text/javascript" defer>
-    <?php
-    if (isset($user->country)) {
-    ?>
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        async function timer() {
-            await sleep(1000);
-            setDefaultCountry();
-        }
-
-        function setDefaultCountry() {
-            var country = "<?php echo htmlspecialchars($user->country) ?>";
-            $('#country').val(country);
-        }
-
-        timer();
-    <?php
-    }
-    ?>
-</Script>
 </body>
 </html>

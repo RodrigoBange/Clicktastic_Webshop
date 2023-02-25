@@ -3,8 +3,8 @@
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Keyboards to satisfy your typing needs.</title>
-    <script defer type="text/javascript" src="../../js/filterproducts.js"></script>
-    <script type="text/javascript" src="../../js/addproduct.js"></script>
+    <script defer type="text/javascript" src="../../js/filter_products.js"></script>
+    <script type="text/javascript" src="../../js/add_product.js"></script>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -44,7 +44,7 @@
                                     </a>
                                     <p class="opacity-75 badge bg-theme"><?= $product->company ?></p>
                                     <h6 class="mb-3" id="price-<?= $product->id ?>">&euro;<?= $product->price ?></h6>
-                                    <button type="button" id="btn-add-<?= $product->id ?>" onclick="addProduct(this.id)"
+                                    <button type="button" id="btn-add-<?= $product->id ?>" onclick="add_product(this.id)"
                                             class="btn btn-theme text-white">Add To Cart</button>
                                     <a href="/shop/product?id=<?= $product->id ?>" class="btn btn-theme text-white">
                                         More Info</a>

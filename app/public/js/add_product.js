@@ -1,4 +1,4 @@
-function addProduct($button_id) {
+function add_product($button_id) {
     // Get numbers of button ID
     var $id = $button_id.match(/\d/g).join("");
     var $price = document.getElementById("price-" + $id).innerText.replace('€', '').replace('&euro;', '');

@@ -18,7 +18,7 @@
                         </a>
                         <p class="opacity-75 badge bg-theme"><?= $product->company ?></p>
                         <h6 class="mb-3" id="price-<?= $product->id ?>">&euro;<?= $product->price ?></h6>
-                        <button type="button" id="btn-add-<?= $product->id ?>" onclick="addProduct(this.id)"
+                        <button type="button" id="btn-add-<?= $product->id ?>" onclick="add_product(this.id)"
                                 class="btn btn-theme text-white">Add To Cart</button>
                         <a href="/shop/product?id=<?= $product->id ?>" class="btn btn-theme text-white">
                             More Info</a>

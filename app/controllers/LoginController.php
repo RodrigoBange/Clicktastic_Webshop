@@ -3,12 +3,12 @@
 require_once(__DIR__ . '/../services/UserService.php');
 
 // Models
-require_once(__DIR__ . "/../models/NavbarFunctions.php");
+require_once(__DIR__ . '/../models/NavbarFunctions.php');
 
 class LoginController
 {
-    private $userService;
-    private $navFunc;
+    private UserService $userService;
+    private NavbarFunctions $navFunc;
 
     public function __construct()
     {
@@ -22,7 +22,16 @@ class LoginController
         $navFunc = $this->navFunc;
 
         // Load the view
-        require_once(__DIR__ . "/../views/login/login.php");
+        require_once(__DIR__ . '/../views/login/login.php');
+    }
+
+    public function loginuser(): void
+    {
+        // Attempt to log in user and return bool
+        $result = $this->userService->loginUser();
+
+        // Return result
+        echo json_encode($result);
     }
 
     public function signup(): void
@@ -31,22 +40,20 @@ class LoginController
         $navFunc = $this->navFunc;
 
         // Load the view
-        require_once(__DIR__ . "/../views/login/signup.php");
+        require_once(__DIR__ . '/../views/login/signup.php');
     }
 
-    public function registeruser(): void
+    public function signupuser(): void
     {
-        $userService = $this->userService;
+        // Sign up user
+        $result = $this->userService->signupUser();
 
-        // Load the view
-        require_once(__DIR__ . "/../views/login/registeruser.php");
+        // Return result
+        echo json_encode($result);
     }
 
-    public function loginuser(): void
+    public function logout(): void
     {
-        $userService = $this->userService;
-
-        // Load the view
-        require_once(__DIR__ . "/../views/login/loginuser.php");
+        $this->userService->logoutUser();
     }
 }

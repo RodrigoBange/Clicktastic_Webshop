@@ -23,15 +23,15 @@ class NavbarFunctions
      */
     public function displayUser() : void
     {
-        if (isset($_SESSION['logged_in'])) {
+        if (isset($_SESSION['user'])) {
             ?>
             <a href="/account/orders" class="nav-item nav-link">Orders</a>
             <a href="/account/account" class="nav-item nav-link">
                 <?php
-                echo "Hello, " . htmlspecialchars($_SESSION['name']);
+                echo "Hello, " . htmlspecialchars($_SESSION['display_name']);
                 ?>
             </a>
-            <a href="/account/logout" class="nav-item nav-link">Logout</a>
+            <a href="/login/logout" class="nav-item nav-link">Logout</a>
             <?php
         } else {
             ?>
@@ -40,23 +40,9 @@ class NavbarFunctions
         }
     }
 
-    public function loggedIn() : void
-    {
-        if (isset($_SESSION['logged_in'])) {
-            ?>
-            <a href="/account/account" class="nav-item nav-link">
-                <?php
-                echo "Hello, " . htmlspecialchars($_SESSION['name']);
-                ?>
-            </a>
-            <?php
-        } else {
-            ?>
-            <a href="/login/login" class="nav-item nav-link">Login</a>
-            <?php
-        }
-    }
-
+    /**
+     * Creates the links for management functionality
+     */
     public function management() : void
     {
         if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
