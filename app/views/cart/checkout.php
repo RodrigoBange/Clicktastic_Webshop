@@ -1,18 +1,12 @@
-<?php
-    if (empty($_SESSION['cart'])) {
-        header("location: /cart/shoppingcart");
-        exit();
-    }
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Checkout</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
-    <script type="text/javascript" src="../../toggle_checkout_options.js"></script>
-    <script type="text/javascript" src="../../cleave_settings.js"></script>
-    <script type="text/javascript" src="../../js/address_autocomplete.js"></script>
+    <script type="text/javascript" src="../../js/toggle_checkout_options.js"></script>
+    <script type="text/javascript" src="../../js/cleave_settings.js" defer></script>
+    <script type="text/javascript" src="../../js/address_autocomplete.js" defer></script>
     <script type="text/javascript" src="../../js/get_user_country.js" defer></script>
 </head>
 <body>
@@ -56,7 +50,7 @@
                     <li class="list-group-item d-flex justify-content-between">
                         <span>Total (Euro)</span>
                         <strong>&euro;
-                            <?= number_format($productService->getSubtotalPrice() + 5.99, 2); ?>
+                            <?= $subtotal ?>
                         </strong>
                     </li>
                     <?php
@@ -71,20 +65,29 @@
                         <div class="col-md-6 mb-3">
                             <label for="firstName">First name</label>
                             <input type="text" class="form-control" id="firstName" placeholder=""
-                                   value="<?php echo htmlspecialchars($user->first_name) ?>"
+                                   value="<?php
+                                            if (!empty ($user->first_name)) {
+                                                echo htmlspecialchars($user->first_name);
+                                            } ?>"
                                    name="billingFirstName" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="lastName">Last name</label>
                             <input type="text" class="form-control" id="lastName" placeholder=""
-                                   value="<?php echo htmlspecialchars($user->last_name) ?>"
+                                   value="<?php
+                                            if (!empty ($user->last_name)) {
+                                                echo htmlspecialchars($user->last_name);
+                                            } ?>"
                                    name="billingLastName" required>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email" placeholder="you@example.com"
-                               name="billingEmail" value="<?php echo htmlspecialchars($user->email) ?>" required>
+                               name="billingEmail" value="<?php
+                                                            if (!empty($user->email)) {
+                                                                echo htmlspecialchars($user->email);
+                                                            } ?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="phone_number">Phone Number</label>
@@ -152,8 +155,8 @@
                     </div>
                     <hr class="mb-4">
                     <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="same-address" checked
-                               onchange="toggleShipping(this);">
+                        <input id="checkbox-shipping" type="checkbox" class="custom-control-input" id="same-address"
+                               checked onchange="toggleShipping(this);">
                         <label class="custom-control-label" for="same-address">
                             Shipping address is the same as my billing address</label>
                     </div>

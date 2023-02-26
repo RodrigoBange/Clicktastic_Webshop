@@ -38,24 +38,29 @@ class CartController
         $cartProducts = $productService->getCartProducts();
 
         // Load the view
-        require_once(__DIR__ . "/../views/cart/shoppingcart.php");
+        require_once(__DIR__ . '/../views/cart/shoppingcart.php');
     }
 
     public function checkout() : void
     {
-        // Service
-        $productService = $this->productService;
-
+        if (empty($_SESSION['cart'])) {
+            header("location: /cart/shoppingcart");
+            return;
+        }
         // Navigation functions
         $navFunc = $this->navFunc;
 
         // Get data of products in shopping cart to load into view
-        $cartProducts = $productService->getCartProducts();
+        $cartProducts = $this->productService->getCartProducts();
 
-        $user = $this->userService->getUser($_SESSION['email']);
+        // Get user object
+        $user = $this->userService->unserializeUser();
+
+        // Format subtotal for display
+        $subtotal = number_format($this->productService->getSubtotalPrice() + 5.99, 2);
 
         // Load the  view
-        require_once(__DIR__ . "/../views/cart/checkout.php");
+        require_once(__DIR__ . '/../views/cart/checkout.php');
     }
 
     public function confirmation() : void
@@ -70,7 +75,7 @@ class CartController
         $cartProducts = $productService->getCartProducts();
 
         // Load the view
-        require_once(__DIR__ . "/../views/cart/confirmation.php");
+        require_once(__DIR__ . '/../views/cart/confirmation.php');
     }
 
     public function addtocart() : void
@@ -96,6 +101,6 @@ class CartController
         $orderService = $this->orderService;
 
         // Load the view
-        require_once(__DIR__ . "/../views/cart/processpurchase.php");
+        require_once(__DIR__ . '/../views/cart/processpurchase.php');
     }
 }

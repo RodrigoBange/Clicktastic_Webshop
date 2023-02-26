@@ -102,7 +102,7 @@ class UserService
     /**
      * Checks if email belongs to unregistered customer
      */
-    public function isPrevCustomer($email) : bool
+    public function isPrevCustomer($email): bool
     {
         return $this->userRepository->emailExists($email);
     }
@@ -110,7 +110,7 @@ class UserService
     /**
      * Checks if the user already exists.
      */
-    public function userExists($email) : bool
+    public function userExists($email): bool
     {
         // return true or false
         return $this->userRepository->userExists($email);
@@ -119,12 +119,12 @@ class UserService
     /**
      * Register a customer's info (Not a user)
      */
-    public function registerCustomer($userInfo) : bool
+    public function registerCustomer($userInfo): bool
     {
         return $this->userRepository->registerCustomer($userInfo);
     }
 
-    public function getAll() : array|null
+    public function getAll(): array|null
     {
         $users = $this->userRepository->getAll();
 
@@ -144,8 +144,46 @@ class UserService
         return $this->userRepository->getUser($email);
     }
 
-    public function updateUser($userInfo) : bool
+    public function updateUser($user): bool
     {
-        return $this->userRepository->updateUser($userInfo);
+        $result = false;
+
+        // Check if form was submitted
+        if (isset($_POST)) {
+            $userInfo = array(
+                'first_name' => $_POST['firstName'],
+                'last_name' => $_POST['lastName'],
+                'address' => $_POST['address'],
+                'address_optional' => $_POST['address2'],
+                'city' => $_POST['city'],
+                'state' => $_POST['state'],
+                'postal_code' => $_POST['zip'],
+                'country' => $_POST['country'],
+                'phone_number' => $_POST['phoneNumber'],
+                'email' => $user->email
+            );
+
+            // Attempt to update
+            $result = $this->userRepository->updateUser($userInfo);
+
+            // If successful, update information
+            if ($result) {
+                // Update user with new database values
+                $_SESSION['user'] = serialize($this->getUser($user->email));
+                $_SESSION['display_name'] = $user->first_name;
+                $_SESSION['is_admin'] = $user->is_admin;
+            }
+        }
+        return $result;
+    }
+
+    public function unserializeUser()
+    {
+        if (!isset($_SESSION['user'])) {
+            return;
+        } else {
+            // Deserialize to object
+            return unserialize($_SESSION['user']);
+        }
     }
 }

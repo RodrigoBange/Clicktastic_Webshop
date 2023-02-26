@@ -41,7 +41,7 @@
                                     <input type="password" id="signupPassword" class="form-control"
                                            name="password" required/>
                                 </div>
-                                <div id="warning" class="collapse">
+                                <div id="warning" class="collapse mt-4">
                                     <div class="alert alert-danger" role="alert">
                                         Invalid credentials. Please try again.
                                     </div>

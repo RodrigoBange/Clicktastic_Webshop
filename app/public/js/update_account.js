@@ -1,16 +1,16 @@
 $(document).ready(function() {
-    $('#loginForm').submit(function(e) {
+    $('#updateForm').submit(function (e) {
         e.preventDefault()
 
         $.ajax({
-            url: '/login/loginuser',
+            url: '/account/updateaccount',
             data: $(this).serialize(),
             dataType: "json",
             method: 'POST',
-            success: function(reply) {
+            success: function (reply) {
                 var result = $.parseJSON(reply);
-                if (result === true) {
-                    window.location.assign("/shop/products");
+                if (reply === true) {
+                    window.location.assign("/account/account");
                 } else {
                     var warning = document.getElementById('warning');
                     if (warning.classList.contains('collapse')) {
@@ -18,8 +18,8 @@ $(document).ready(function() {
                     }
                 }
             },
-            error: function(req, status, error) {
-                console.log( 'Something went wrong: ', status, error, req );
+            error: function (req, status, error) {
+                console.log('Something went wrong: ', status, error, req);
             }
         });
     });
