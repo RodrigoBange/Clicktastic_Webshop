@@ -91,20 +91,13 @@
                                 <h4 class="text-muted">Summary</h4>
                                 <div class="summary-item row"><span class="text col-md-4 col-sm-2">Subtotal
                                 </span><span class="fw-semibold col-md-5 col-sm-4" id="subtotal">
-                                    &euro;
-                                    <?php
-                                    echo number_format($productService->getSubtotalPrice(), 2);
-                                    ?></span></div>
+                                    &euro; <?= $subtotal ?></span></div>
                                 <div class="summary-item row pt-2 pb-2"><span class="text col-md-4 col-sm-2">Shipping
                                 </span><span class="fw-semibold col-md-4 col-sm-4" id="shipping">&euro;
-                                    <?php
-                                        echo number_format(5.99, 2);
-                                    ?></span></div>
+                                    <?= $shipping ?></span></div>
                                 <div class="summary-item row"><span class="text col-md-4 col-sm-2"><b>Total</b>
                                 </span><span class="fw-semibold col-md-5 col-sm-4" id="total">
-                                &euro; <?php
-                                    echo number_format($productService->getSubtotalPrice() + 5.99, 2);
-                                ?></span></div>
+                                &euro; <?= $total ?></span></div>
                                 <a href="/cart/checkout" class="btn btn-theme text-white btn-lg btn-block mt-3">
                                     Checkout</a>
                             </div>

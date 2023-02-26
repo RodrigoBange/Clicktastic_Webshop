@@ -26,27 +26,31 @@ class CartController
         $this->navFunc = new NavbarFunctions();
     }
 
-    public function shoppingcart() : void
+    public function shoppingcart(): void
     {
-        // Service
-        $productService = $this->productService;
-
         // Navigation functions
         $navFunc = $this->navFunc;
 
         // Get data of products in shopping cart to load into view
-        $cartProducts = $productService->getCartProducts();
+        $cartProducts = $this->productService->getCartProducts();
+
+        // Get the subtotal, shipping cost and total to display
+        $subtotal = $this->productService->getSubtotalPrice();
+        $shipping = $this->productService->getShippingCost();
+        $total = $this->productService->getTotalPrice();
 
         // Load the view
         require_once(__DIR__ . '/../views/cart/shoppingcart.php');
     }
 
-    public function checkout() : void
+    public function checkout(): void
     {
+        // If cart is empty, return to shoppingcart instead
         if (empty($_SESSION['cart'])) {
-            header("location: /cart/shoppingcart");
+            header('location: /cart/shoppingcart');
             return;
         }
+
         // Navigation functions
         $navFunc = $this->navFunc;
 
@@ -56,29 +60,39 @@ class CartController
         // Get user object
         $user = $this->userService->unserializeUser();
 
-        // Format subtotal for display
-        $subtotal = number_format($this->productService->getSubtotalPrice() + 5.99, 2);
+        // Get the subtotal, shipping cost and total to display
+        $subtotal = $this->productService->getSubtotalPrice();
+        $shipping = $this->productService->getShippingCost();
+        $total = $this->productService->getTotalPrice();
 
         // Load the  view
         require_once(__DIR__ . '/../views/cart/checkout.php');
     }
 
-    public function confirmation() : void
+    public function confirmation(): void
     {
-        // Service
-        $productService = $this->productService;
+        // If cart is empty or post is incomplete, return to shopping cart instead
+        if (empty($_SESSION['cart']) || !isset($_POST['billingFirstName'])) {
+            header('location: /cart/shoppingcart');
+            return;
+        }
 
         // Navigation functions
         $navFunc = $this->navFunc;
 
         // Get datta of products in shopping cart to load into view
-        $cartProducts = $productService->getCartProducts();
+        $cartProducts = $this->productService->getCartProducts();
+
+        // Get the subtotal, shipping cost and total to display
+        $subtotal = $this->productService->getSubtotalPrice();
+        $shipping = $this->productService->getShippingCost();
+        $total = $this->productService->getTotalPrice();
 
         // Load the view
         require_once(__DIR__ . '/../views/cart/confirmation.php');
     }
 
-    public function addtocart() : void
+    public function addtocart(): void
     {
         // Add product to cart
         $this->cartService->addToCart();
@@ -87,20 +101,15 @@ class CartController
         echo $this->navFunc->getCount();
     }
 
-    public function editcart() : void
+    public function editcart(): void
     {
         // Update cart
         $this->cartService->editCart($this->navFunc, $this->productService);
     }
 
-    public function processpurchase() : void
+    public function processpurchase(): void
     {
-        // Service
-        $productService = $this->productService;
-        $userService = $this->userService;
-        $orderService = $this->orderService;
-
-        // Load the view
-        require_once(__DIR__ . '/../views/cart/processpurchase.php');
+        // Process purchase
+        $this->orderService->processPurchase();
     }
 }

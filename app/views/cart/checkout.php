@@ -30,7 +30,7 @@
                     ?>
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>
-                                <h6 class="my-0"><?= $cartProduct->name ?></h6>
+                                <h6 class="my-0"><?= htmlspecialchars($cartProduct->name); ?></h6>
                                 <small class="text-muted">Quantity:
                                     <?= $_SESSION['cart'][$cartProduct->id]['product_quantity'] ?>x
                                 </small>
@@ -44,14 +44,16 @@
                     }
                     ?>
                     <li class="list-group-item d-flex justify-content-between">
+                        <span>Subtotal</span>
+                        <span class="text-muted">&euro; <?= $subtotal ?></span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
                         <span>Shipping</span>
-                        <span class="text-muted">&euro; 5.99</span>
+                        <span class="text-muted">&euro; <?= $shipping ?></span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
                         <span>Total (Euro)</span>
-                        <strong>&euro;
-                            <?= $subtotal ?>
-                        </strong>
+                        <strong>&euro; <?= $total ?> </strong>
                     </li>
                     <?php
                 }
@@ -69,7 +71,7 @@
                                             if (!empty ($user->first_name)) {
                                                 echo htmlspecialchars($user->first_name);
                                             } ?>"
-                                   name="billingFirstName" required>
+                                   name="billingFirstName" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="lastName">Last name</label>
@@ -78,7 +80,7 @@
                                             if (!empty ($user->last_name)) {
                                                 echo htmlspecialchars($user->last_name);
                                             } ?>"
-                                   name="billingLastName" required>
+                                   name="billingLastName" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -91,7 +93,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="phone_number">Phone Number</label>
-                        <input type="text" class="form-control" id="phone_number" placeholder="+31 6 12345678"
+                        <input type="tel" class="form-control" id="phone_number" placeholder="+31 6 12345678"
                                name="billingPhoneNumber" value="<?php
                                                     if (!empty($user->phone_number)) {
                                                         echo htmlspecialchars($user->phone_number);
@@ -122,6 +124,7 @@
                     <div class="mb-3">
                         <label for="citytown">City / Town</label>
                         <input type="text" class="form-control" id="citytown" name="billingCity"
+                               pattern="^[a-zA-Z][\sa-zA-Z]*"
                                value="<?php
                                if (!empty($user->city)) {
                                    echo htmlspecialchars($user->city);
@@ -137,20 +140,21 @@
                         <div class="col-md-4 mb-3">
                             <label for="stateprovince">State / Province</label>
                             <input type="text" class="form-control" id="stateprovince" placeholder=""
-                                   name="billingState" value="<?php
-                            if (!empty($user->state)) {
-                                echo htmlspecialchars($user->state);
-                            }
-                            ?>" required>
+                                   name="billingState" pattern="^[a-zA-Z][\sa-zA-Z]*"
+                                   value="<?php
+                                            if (!empty($user->state)) {
+                                                echo htmlspecialchars($user->state);
+                                            }
+                                            ?>" required>
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="zip">Zip</label>
                             <input type="text" class="form-control" id="zip" placeholder="" name="billingZip"
                                    value="<?php
-                                   if (!empty($user->postal_code)) {
-                                       echo htmlspecialchars($user->postal_code);
-                                   }
-                                   ?>" required>
+                                           if (!empty($user->postal_code)) {
+                                               echo htmlspecialchars($user->postal_code);
+                                           }
+                                           ?>" required>
                         </div>
                     </div>
                     <hr class="mb-4">
@@ -167,12 +171,14 @@
                             <div class="col-md-6 mb-3">
                                 <label for="firstNameShip">First name</label>
                                 <input type="text" class="form-control" id="firstNameShip" placeholder="" value=""
-                                       disabled="disabled" name="shippingFirstName" required>
+                                       disabled="disabled" name="shippingFirstName"
+                                       pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="lastNameShip">Last name</label>
                                 <input type="text" class="form-control" id="lastNameShip" placeholder="" value=""
-                                       disabled="disabled" name="shippingLastName" required>
+                                       disabled="disabled" name="shippingLastName"
+                                       pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                             </div>
                         </div>
                         <div class="mb-0">
@@ -189,7 +195,7 @@
                         <div class="mb-3">
                             <label for="citytownShip">City / Town</label>
                             <input type="text" class="form-control" id="citytownShip" disabled="disabled"
-                                   name="shippingCity" required>
+                                   name="shippingCity" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                         </div>
                         <div class="row">
                             <div class="col-md-5 mb-3">
@@ -201,7 +207,7 @@
                             <div class="col-md-4 mb-3">
                                 <label for="stateprovinceShip">State / Province</label>
                                 <input type="text" class="form-control" id="stateprovinceShip" placeholder=""
-                                       disabled="disabled" name="shippingState" required>
+                                       disabled="disabled" name="shippingState" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="zipShip">Zip</label>
@@ -215,17 +221,17 @@
                     <div class="d-block my-3">
                         <div class="custom-control custom-radio">
                             <input id="credit" name="paymentMethod" value="creditCard" type="radio"
-                                   class="custom-control-input" checked="" onchange="togglePayPal(this)">
+                                   class="custom-control-input" checked="" onchange="togglePayment(this)">
                             <label class="custom-control-label" for="credit">Credit card</label>
                         </div>
                         <div class="custom-control custom-radio">
                             <input id="debit" name="paymentMethod" type="radio" value="debitCard"
-                                   class="custom-control-input" onchange="togglePayPal(this)">
+                                   class="custom-control-input" onchange="togglePayment(this)">
                             <label class="custom-control-label" for="debit">Debit card</label>
                         </div>
                         <div class="custom-control custom-radio">
                             <input id="paypal" name="paymentMethod" type="radio" value="paypal"
-                                   class="custom-control-input" onchange="togglePayPal(this)">
+                                   class="custom-control-input" onchange="togglePayment(this)">
                             <label class="custom-control-label" for="paypal">Paypal</label>
                         </div>
                     </div>
@@ -234,7 +240,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="cc-name">Name on card</label>
                                 <input type="text" class="form-control" id="cc-name" placeholder=""
-                                       name="cardName" required>
+                                       name="cardName" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                                 <small class="text-muted">Full name as displayed on card</small>
                             </div>
                             <div class="col-md-6 mb-3">

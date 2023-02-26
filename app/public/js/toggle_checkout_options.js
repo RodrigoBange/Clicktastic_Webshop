@@ -31,7 +31,7 @@ function toggleShipping(checkbox) {
     }
 }
 
-function togglePayPal(radioButton) {
+function togglePayment(radioButton) {
     var ccField = document.getElementById('ccField');
     var paypalField = document.getElementById('paypalField');
 

@@ -1,34 +1,10 @@
-<?php
-    if (empty($_SESSION['cart'])) {
-        header("location: /cart/shoppingcart");
-        exit();
-    }
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Confirm Purchase</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
-    <script>
-        function confirmPurchase() {
-            $.ajax({
-                type: 'POST',
-                url: '/cart/processpurchase',
-                data: {
-                    data: <?php echo json_encode($_POST); ?>
-                },
-                success: function(reply) {
-                    // If all good, navigate to success screen
-                    console.log("success" + reply)
-                },
-                error: function(req, status, error) {
-                    // Display error
-                    console.log( 'Something went wrong: ', status, error, req );
-                }
-            });
-        }
-    </script>
+    <script type="text/javascript" src="../../js/confirm_purchase.js"></script>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -52,9 +28,9 @@
                     ?>
                         <li class="list-group-item d-flex lh-condensed">
                             <img class="w-25"
-                                 src="../../images/<?= htmlspecialchars($cartProduct->image) ?>" alt="keyboard">
+                                 src="../../images/<?= htmlspecialchars($cartProduct->image); ?>" alt="keyboard">
                             <div class="flex-grow-1">
-                                <h6 class="my-0"><?= $cartProduct->name ?></h6>
+                                <h6 class="my-0"><?= htmlspecialchars($cartProduct->name); ?></h6>
                                 <small class="text-muted">Quantity:
                                     <?= $_SESSION['cart'][$cartProduct->id]['product_quantity'] ?>x
                                 </small>
@@ -68,21 +44,23 @@
                     }
                     ?>
                     <li class="list-group-item d-flex justify-content-between">
+                        <span>Subtotal</span>
+                        <span class="text-muted">&euro; <?= $subtotal ?></span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
                         <span>Shipping</span>
-                        <span class="text-muted">&euro; 5.99</span>
+                        <span class="text-muted">&euro; <?= $shipping ?></span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
                         <span>Total (Euro)</span>
-                        <strong>&euro;
-                            <?= number_format($productService->getSubtotalPrice() + 5.99, 2); ?>
-                        </strong>
+                        <strong>&euro; <?= $total ?> </strong>
                     </li>
                     <?php
                 }
                 ?>
                 </ul>
                 <button class="btn btn-theme btn-lg btn-block text-white sticky-xl-top sticky-lg-top sticky-md-top"
-                        type="submit" onclick="confirmPurchase()" style="top: 320px;">Confirm Purchase</button>
+                        type="submit" onclick="confirmPurchase(<?= json_encode($_POST)?>)" style="top: 320px;">Confirm Purchase</button>
             </div>
             <div class="col-md-7 order-md-1">
                 <h4 class="mb-3">Shipping address</h4>

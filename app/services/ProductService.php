@@ -152,29 +152,24 @@ class ProductService
             }
         }
 
-        return $subtotal;
+        return number_format($subtotal,2);
+    }
+
+    public function getTotalPrice(): float|int
+    {
+        // Calculate subtotal plus shipping cost
+        return number_format($this->getSubtotalPrice() + $this->getShippingCost(), 2);
+    }
+
+    public function getShippingCost(): float|int
+    {
+        // Returns formatted shipping cost
+        return number_format(5.99, 2);
     }
 
     public function getProductsOfOrder($id): array|null
     {
         return $this->productRepository->getProductsOfOrder($id);
-    }
-
-    public function getTitleProduct()
-    {
-        if (isset($_GET['id'])) {
-            try {
-                $product = $productService->getProductById($_GET['id']);
-
-                if ($product != null) {
-                    echo $product->name;
-                } else {
-                    echo "Product not found.";
-                }
-            } catch (Exception $e) {
-                echo "Product not found.";
-            }
-        }
     }
 
     public function getFilteredProducts()
