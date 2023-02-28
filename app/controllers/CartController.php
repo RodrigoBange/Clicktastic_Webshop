@@ -1,107 +1,184 @@
 <?php
 // Service
-require_once(__DIR__ . "/../services/ProductService.php");
-require_once(__DIR__ . "/../services/UserService.php");
-require_once(__DIR__ . "/../services/OrderService.php");
+require_once(__DIR__ . '/../services/CartService.php');
+require_once(__DIR__ . '/../services/ProductService.php');
+require_once(__DIR__ . '/../services/UserService.php');
+require_once(__DIR__ . '/../services/OrderService.php');
 
 // Model
-require_once(__DIR__ . "/../models/NavbarFunctions.php");
+require_once(__DIR__ . '/../models/NavbarFunctions.php');
 
 class CartController
 {
+    private CartService $cartService;
     private ProductService $productService;
     private UserService $userService;
     private OrderService $orderService;
     private NavbarFunctions $navFunc;
+    private string $page;
 
     public function __construct()
     {
         // Initialize
+        $this->cartService = new CartService();
         $this->productService = new ProductService();
         $this->userService = new UserService();
         $this->orderService = new OrderService();
         $this->navFunc = new NavbarFunctions();
+        $this->page = 'cart';
     }
 
-    public function shoppingcart() : void
+    /**
+     * Opens the shopping cart overview
+     */
+    public function shoppingcart(): void
     {
-        // Service
-        $productService = $this->productService;
-
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Get data of products in shopping cart to load into view
-        $cartProducts = $productService->getCartProducts();
+        $cartProducts = $this->productService->getCartProducts();
+
+        // Get the subtotal, shipping cost and total to display
+        $subtotal = $this->productService->getSubtotalPrice();
+        $shipping = $this->productService->getShippingCost();
+        $total = $this->productService->getTotalPrice();
 
         // Load the view
-        require_once(__DIR__ . "/../views/cart/shoppingcart.php");
+        require_once(__DIR__ . '/../views/cart/shoppingcart.php');
     }
 
-    public function checkout() : void
+    /**
+     * Opens the checkout page
+     */
+    public function checkout(): void
     {
-        // Service
-        $productService = $this->productService;
+        // If cart is empty, return to shoppingcart instead
+        if (empty($_SESSION['cart'])) {
+            header('location: /cart/shoppingcart');
+            return;
+        }
 
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Get data of products in shopping cart to load into view
-        $cartProducts = $productService->getCartProducts();
+        $cartProducts = $this->productService->getCartProducts();
 
-        $user = $this->userService->getUser($_SESSION['email']);
+        // Get user object
+        $user = $this->userService->unserializeUser();
+
+        // Get the subtotal, shipping cost and total to display
+        $subtotal = $this->productService->getSubtotalPrice();
+        $shipping = $this->productService->getShippingCost();
+        $total = $this->productService->getTotalPrice();
 
         // Load the  view
-        require_once(__DIR__ . "/../views/cart/checkout.php");
+        require_once(__DIR__ . '/../views/cart/checkout.php');
     }
 
-    public function confirmation() : void
+    /**
+     * Opens the confirmation page
+     */
+    public function confirmation(): void
     {
-        // Service
-        $productService = $this->productService;
+        if (isset($_POST['submit'])) { // Save POST for processing
+                $_SESSION['confirmationData'] = $_POST;
+        }
+
+        // If cart is empty or post is incomplete, return to shopping cart instead
+        if (empty($_SESSION['cart']) || empty($_SESSION['confirmationData'])) {
+            header('location: /cart/shoppingcart');
+            return;
+        }
 
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Get datta of products in shopping cart to load into view
-        $cartProducts = $productService->getCartProducts();
+        $cartProducts = $this->productService->getCartProducts();
+
+        // Get the subtotal, shipping cost and total to display
+        $subtotal = $this->productService->getSubtotalPrice();
+        $shipping = $this->productService->getShippingCost();
+        $total = $this->productService->getTotalPrice();
 
         // Load the view
-        require_once(__DIR__ . "/../views/cart/confirmation.php");
+        require_once(__DIR__ . '/../views/cart/confirmation.php');
     }
 
-    public function addtocart() : void
+    /**
+     * AJAX, adds an item to the cart and returns the new count
+     */
+    public function addtocart(): void
     {
-        // Service
-        $productService = $this->productService;
+        // Add product to cart
+        $this->cartService->addToCart();
 
+        // Echo new count
+        echo $this->navFunc->getCount();
+    }
+
+    /**
+     * AJAX, updates the cart
+     */
+    public function editcart(): void
+    {
+        // Update cart
+        echo json_encode($this->cartService->editCart($this->navFunc, $this->productService));
+    }
+
+    /**
+     * Opens the purchase processing page
+     */
+    public function processpurchase(): void
+    {
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Load the view
-        require_once(__DIR__ . "/../views/cart/addtocart.php");
+        require_once(__DIR__ . '/../views/cart/processpurchase.php');
     }
 
-    public function editcart() : void
+    /**
+     * AJAX, processes the payment
+     */
+    public function processment(): void
     {
-        // Service
-        $productService = $this->productService;
+        // Process purchase
+        echo json_encode($this->orderService->processPurchase($this->userService, $this->productService));
+    }
 
+    /**
+     * Opens the successful payment page
+     */
+    public function paymentsuccess(): void
+    {
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
+
+        // Empties information
+        $this->cartService->emptyCart();
 
         // Load the view
-        require_once(__DIR__ . "/../views/cart/editcart.php");
+        require_once(__DIR__ . '/../views/cart/paymentsuccess.php');
     }
 
-    public function processpurchase() : void
+    /**
+     * Opens the failure payment page
+     */
+    public function paymentfailure(): void
     {
-        // Service
-        $productService = $this->productService;
-        $userService = $this->userService;
-        $orderService = $this->orderService;
+        // Navigation functions
+        $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Load the view
-        require_once(__DIR__ . "/../views/cart/processpurchase.php");
+        require_once(__DIR__ . '/../views/cart/paymentfailure.php');
     }
 }

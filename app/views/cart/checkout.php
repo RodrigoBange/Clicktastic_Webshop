@@ -1,85 +1,13 @@
-<?php
-    if (empty($_SESSION['cart'])) {
-        header("location: /cart/shoppingcart");
-        exit();
-    }
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Checkout</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
-    <script>
-        function toggleShipping($checkbox) {
-            $shippingForm = document.getElementById("shipping-diff");
-
-            if ($checkbox.checked) { // Hide extra form
-                if (!$shippingForm.classList.contains("collapse")) {
-                    $shippingForm.classList.add("collapse");
-
-                    // Disable elements required
-                    document.getElementById("firstNameShip").disabled = true;
-                    document.getElementById("lastNameShip").disabled = true;
-                    document.getElementById("addressShip").disabled = true;
-                    document.getElementById("citytownShip").disabled = true;
-                    document.getElementById("countryShip").disabled = true;
-                    document.getElementById("stateprovinceShip").disabled = true;
-                    document.getElementById("zipShip").disabled = true;
-
-                }
-            } else { // Display extra form
-                if ($shippingForm.classList.contains("collapse")) {
-                    $shippingForm.classList.remove("collapse");
-
-                    // Disable elements required
-                    document.getElementById("firstNameShip").disabled = false;
-                    document.getElementById("lastNameShip").disabled = false;
-                    document.getElementById("addressShip").disabled = false;
-                    document.getElementById("citytownShip").disabled = false;
-                    document.getElementById("countryShip").disabled = false;
-                    document.getElementById("stateprovinceShip").disabled = false;
-                    document.getElementById("zipShip").disabled = false;
-                }
-            }
-        }
-    </script>
-    <script>
-        function togglePayPal($radioButton) {
-            $ccField = document.getElementById("ccField");
-            $paypalField = document.getElementById("paypalField");
-
-            if ($radioButton.id === "paypal" && $radioButton.checked) { // Display PayPal field
-                if ($paypalField.classList.contains("collapse")) {
-                    $paypalField.classList.remove("collapse");
-                    $ccField.classList.add("collapse");
-
-                    // Disable elements required
-                    document.getElementById("cc-name").disabled = true;
-                    document.getElementById("cc-number").disabled = true;
-                    document.getElementById("cc-expiration").disabled = true;
-                    document.getElementById("cc-cvv").disabled = true;
-
-                    // Enable elements required
-                    document.getElementById("paypal-email").disabled = false;
-                }
-            } else { // Display credit/debit fields
-                if (!$paypalField.classList.contains("collapse")) {
-                    $paypalField.classList.add("collapse");
-                    $ccField.classList.remove("collapse");
-
-                    // Disable elements required
-                    document.getElementById("paypal-email").disabled = true;
-
-                    // Enable elements required
-                    document.getElementById("cc-name").disabled = false;
-                    document.getElementById("cc-number").disabled = false;
-                    document.getElementById("cc-expiration").disabled = false;
-                    document.getElementById("cc-cvv").disabled = false;
-                }
-            }
-        }
-    </script>
+    <script type="text/javascript" src="../../js/toggle_checkout_options.js"></script>
+    <script type="text/javascript" src="../../js/cleave_settings.js" defer></script>
+    <script type="text/javascript" src="../../js/address_autocomplete.js" defer></script>
+    <script type="text/javascript" src="../../js/get_user_country.js" defer></script>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -102,28 +30,30 @@
                     ?>
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>
-                                <h6 class="my-0"><?= $cartProduct->name ?></h6>
+                                <h6 class="my-0"><?= htmlspecialchars($cartProduct->getName()); ?></h6>
                                 <small class="text-muted">Quantity:
-                                    <?= $_SESSION['cart'][$cartProduct->id]['product_quantity'] ?>x
+                                    <?= $_SESSION['cart'][$cartProduct->getId()]['product_quantity'] ?>x
                                 </small>
-                                <small class="text-muted">&euro; <?= $cartProduct->price ?></small>
+                                <small class="text-muted">&euro; <?= $cartProduct->getPrice() ?></small>
                             </div>
                             <span class="text-muted">&euro;
-                                <?= number_format($cartProduct->price * $_SESSION['cart'][$cartProduct->id]['product_quantity'], 2);
+                                <?= number_format($cartProduct->getPrice() * $_SESSION['cart'][$cartProduct->getId()]['product_quantity'], 2);
                                 ?></span>
                         </li>
                     <?php
                     }
                     ?>
                     <li class="list-group-item d-flex justify-content-between">
+                        <span>Subtotal</span>
+                        <span class="text-muted">&euro; <?= $subtotal ?></span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
                         <span>Shipping</span>
-                        <span class="text-muted">&euro; 5.99</span>
+                        <span class="text-muted">&euro; <?= $shipping ?></span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
                         <span>Total (Euro)</span>
-                        <strong>&euro;
-                            <?= number_format($productService->getSubtotalPrice() + 5.99, 2); ?>
-                        </strong>
+                        <strong>&euro; <?= $total ?> </strong>
                     </li>
                     <?php
                 }
@@ -137,27 +67,36 @@
                         <div class="col-md-6 mb-3">
                             <label for="firstName">First name</label>
                             <input type="text" class="form-control" id="firstName" placeholder=""
-                                   value="<?php echo htmlspecialchars($user->first_name) ?>"
-                                   name="billingFirstName" required>
+                                   value="<?php
+                                            if (!empty ($user->getFirstName())) {
+                                                echo htmlspecialchars($user->getFirstName());
+                                            } ?>"
+                                   name="billingFirstName" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="lastName">Last name</label>
                             <input type="text" class="form-control" id="lastName" placeholder=""
-                                   value="<?php echo htmlspecialchars($user->last_name) ?>"
-                                   name="billingLastName" required>
+                                   value="<?php
+                                            if (!empty ($user->getLastName())) {
+                                                echo htmlspecialchars($user->getLastName());
+                                            } ?>"
+                                   name="billingLastName" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email" placeholder="you@example.com"
-                               name="billingEmail" value="<?php echo htmlspecialchars($user->email) ?>" required>
+                               name="billingEmail" value="<?php
+                                                            if (!empty($user->getEmail())) {
+                                                                echo htmlspecialchars($user->getEmail());
+                                                            } ?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="phone_number">Phone Number</label>
-                        <input type="text" class="form-control" id="phone_number" placeholder="+31 6 12345678"
+                        <input type="tel" class="form-control" id="phone_number" placeholder="+31 6 12345678"
                                name="billingPhoneNumber" value="<?php
-                                                    if (!empty($user->phone_number)) {
-                                                        echo htmlspecialchars($user->phone_number);
+                                                    if (!empty($user->getPhoneNumber())) {
+                                                        echo htmlspecialchars($user->getPhoneNumber());
                                                     }
                                                     ?>"
                                required>
@@ -167,8 +106,8 @@
                         <input type="text" class="form-control" id="address"
                                placeholder="Street address, P.O. box, company name" name="billingAddress"
                                value="<?php
-                               if (!empty($user->address)) {
-                                   echo htmlspecialchars($user->address);
+                               if (!empty($user->getAddress())) {
+                                   echo htmlspecialchars($user->getAddress());
                                }
                                ?>" required>
                     </div>
@@ -177,17 +116,18 @@
                         <input type="text" class="form-control" id="address2"
                                placeholder="Apartment, suite, unit, building, floor, etc." name="billingAddress2"
                                value="<?php
-                               if (!empty($user->address_optional)) {
-                                   echo htmlspecialchars($user->address_optional);
+                               if (!empty($user->getAddressOptional())) {
+                                   echo htmlspecialchars($user->getAddressOptional());
                                }
                                ?>" >
                     </div>
                     <div class="mb-3">
                         <label for="citytown">City / Town</label>
                         <input type="text" class="form-control" id="citytown" name="billingCity"
+                               pattern="^[a-zA-Z][\sa-zA-Z]*"
                                value="<?php
-                               if (!empty($user->city)) {
-                                   echo htmlspecialchars($user->city);
+                               if (!empty($user->getCity())) {
+                                   echo htmlspecialchars($user->getCity());
                                }
                                ?>" required>
                     </div>
@@ -200,26 +140,27 @@
                         <div class="col-md-4 mb-3">
                             <label for="stateprovince">State / Province</label>
                             <input type="text" class="form-control" id="stateprovince" placeholder=""
-                                   name="billingState" value="<?php
-                            if (!empty($user->state)) {
-                                echo htmlspecialchars($user->state);
-                            }
-                            ?>" required>
+                                   name="billingState" pattern="^[a-zA-Z][\sa-zA-Z]*"
+                                   value="<?php
+                                            if (!empty($user->getState())) {
+                                                echo htmlspecialchars($user->getState());
+                                            }
+                                            ?>" required>
                         </div>
                         <div class="col-md-3 mb-3">
                             <label for="zip">Zip</label>
                             <input type="text" class="form-control" id="zip" placeholder="" name="billingZip"
                                    value="<?php
-                                   if (!empty($user->postal_code)) {
-                                       echo htmlspecialchars($user->postal_code);
-                                   }
-                                   ?>" required>
+                                           if (!empty($user->getPostalCode())) {
+                                               echo htmlspecialchars($user->getPostalCode());
+                                           }
+                                           ?>" required>
                         </div>
                     </div>
                     <hr class="mb-4">
                     <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="same-address" checked
-                               onchange="toggleShipping(this);">
+                        <input id="checkbox-shipping" type="checkbox" class="custom-control-input" id="same-address"
+                               checked onchange="toggleShipping(this);">
                         <label class="custom-control-label" for="same-address">
                             Shipping address is the same as my billing address</label>
                     </div>
@@ -230,12 +171,14 @@
                             <div class="col-md-6 mb-3">
                                 <label for="firstNameShip">First name</label>
                                 <input type="text" class="form-control" id="firstNameShip" placeholder="" value=""
-                                       disabled="disabled" name="shippingFirstName" required>
+                                       disabled="disabled" name="shippingFirstName"
+                                       pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="lastNameShip">Last name</label>
                                 <input type="text" class="form-control" id="lastNameShip" placeholder="" value=""
-                                       disabled="disabled" name="shippingLastName" required>
+                                       disabled="disabled" name="shippingLastName"
+                                       pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                             </div>
                         </div>
                         <div class="mb-0">
@@ -252,7 +195,7 @@
                         <div class="mb-3">
                             <label for="citytownShip">City / Town</label>
                             <input type="text" class="form-control" id="citytownShip" disabled="disabled"
-                                   name="shippingCity" required>
+                                   name="shippingCity" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                         </div>
                         <div class="row">
                             <div class="col-md-5 mb-3">
@@ -264,7 +207,7 @@
                             <div class="col-md-4 mb-3">
                                 <label for="stateprovinceShip">State / Province</label>
                                 <input type="text" class="form-control" id="stateprovinceShip" placeholder=""
-                                       disabled="disabled" name="shippingState" required>
+                                       disabled="disabled" name="shippingState" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="zipShip">Zip</label>
@@ -278,17 +221,17 @@
                     <div class="d-block my-3">
                         <div class="custom-control custom-radio">
                             <input id="credit" name="paymentMethod" value="creditCard" type="radio"
-                                   class="custom-control-input" checked="" onchange="togglePayPal(this)">
+                                   class="custom-control-input" checked="" onchange="togglePayment(this)">
                             <label class="custom-control-label" for="credit">Credit card</label>
                         </div>
                         <div class="custom-control custom-radio">
                             <input id="debit" name="paymentMethod" type="radio" value="debitCard"
-                                   class="custom-control-input" onchange="togglePayPal(this)">
+                                   class="custom-control-input" onchange="togglePayment(this)">
                             <label class="custom-control-label" for="debit">Debit card</label>
                         </div>
                         <div class="custom-control custom-radio">
                             <input id="paypal" name="paymentMethod" type="radio" value="paypal"
-                                   class="custom-control-input" onchange="togglePayPal(this)">
+                                   class="custom-control-input" onchange="togglePayment(this)">
                             <label class="custom-control-label" for="paypal">Paypal</label>
                         </div>
                     </div>
@@ -297,7 +240,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="cc-name">Name on card</label>
                                 <input type="text" class="form-control" id="cc-name" placeholder=""
-                                       name="cardName" required>
+                                       name="cardName" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                                 <small class="text-muted">Full name as displayed on card</small>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -335,46 +278,5 @@
     </div>
 </main>
 <?php include_once(__DIR__ . '/../footer.php'); ?>
-<script type="text/javascript" src="../../js/address_autocomplete.js"></script>
-<script>
-    var creditCleave = new Cleave('#cc-number', {
-        creditCard: true,
-        onCreditCardTypeChanged: function(type) {
-        }
-    });
-
-    var expCleave = new Cleave('#cc-expiration', {
-        date: true,
-        datePattern: ['m', 'y']
-    });
-
-    var cvvCleave = new Cleave('#cc-cvv', {
-        blocks: [3],
-        uppercase: true
-    });
-</script>
-<Script type="text/javascript" defer>
-    <?php
-    if (isset($user->country)) {
-    ?>
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    async function timer() {
-        await sleep(1000);
-        setDefaultCountry();
-    }
-
-    function setDefaultCountry() {
-        var country = "<?php echo htmlspecialchars($user->country) ?>";
-        $('#country').val(country);
-    }
-
-    timer();
-    <?php
-    }
-    ?>
-</Script>
 </body>
 </html>

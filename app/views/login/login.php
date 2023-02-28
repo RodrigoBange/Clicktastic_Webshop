@@ -1,42 +1,9 @@
-<?php
-    if (isset($_SESSION['logged_in'])) {
-        header("location: /account/account");
-        exit();
-    }
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
-    <title>Create an account.</title>
-    <script>
-        $(document).ready(function() {
-            $('#loginForm').submit(function(e) {
-                e.preventDefault()
-
-                $.ajax({
-                    url: '/login/loginuser',
-                    data: $(this).serialize(),
-                    dataType: "json",
-                    method: 'POST',
-                    success: function(reply) {
-                        var $warning;
-                        if (reply) {
-                            window.location.assign("/shop/products");
-                        } else {
-                            $warning = $('#warning');
-                            if (warning.classList.contains('collapse')) {
-                                warning.classList.remove('collapse');
-                            }
-                        }
-                    },
-                    error: function(req, status, error) {
-                        console.log( 'Something went wrong: ', status, error, req );
-                    }
-                });
-            });
-        });
-    </script>
+    <title>Log in.</title>
+    <script type="text/javascript" src="../../js/login_user.js"></script>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -68,7 +35,7 @@
                                     <input type="password" id="signupPassword" class="form-control"
                                            name="password" required/>
                                 </div>
-                                <div id="warning" class="collapse">
+                                <div id="warning" class="collapse mt-4">
                                     <div class="alert alert-danger" role="alert">
                                         Invalid credentials. Please try again.
                                     </div>

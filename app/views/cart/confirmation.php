@@ -1,34 +1,8 @@
-<?php
-    if (empty($_SESSION['cart'])) {
-        header("location: /cart/shoppingcart");
-        exit();
-    }
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
-    <title>Confirm Purchase</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
-    <script>
-        function confirmPurchase() {
-            $.ajax({
-                type: 'POST',
-                url: '/cart/processpurchase',
-                data: {
-                    data: <?php echo json_encode($_POST); ?>
-                },
-                success: function(reply) {
-                    // If all good, navigate to success screen
-                    console.log("success" + reply)
-                },
-                error: function(req, status, error) {
-                    // Display error
-                    console.log( 'Something went wrong: ', status, error, req );
-                }
-            });
-        }
-    </script>
+    <title>Confirm Purchase!</title>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -52,73 +26,75 @@
                     ?>
                         <li class="list-group-item d-flex lh-condensed">
                             <img class="w-25"
-                                 src="../../images/<?= htmlspecialchars($cartProduct->image) ?>" alt="keyboard">
+                                 src="../../images/<?= htmlspecialchars($cartProduct->getImage()); ?>" alt="keyboard">
                             <div class="flex-grow-1">
-                                <h6 class="my-0"><?= $cartProduct->name ?></h6>
+                                <h6 class="my-0"><?= htmlspecialchars($cartProduct->getName()); ?></h6>
                                 <small class="text-muted">Quantity:
-                                    <?= $_SESSION['cart'][$cartProduct->id]['product_quantity'] ?>x
+                                    <?= $_SESSION['cart'][$cartProduct->getId()]['product_quantity'] ?>x
                                 </small>
-                                <small class="text-muted">&euro; <?= $cartProduct->price ?></small>
+                                <small class="text-muted">&euro; <?= $cartProduct->getPrice() ?></small>
                             </div>
                             <span class="text-muted text-nowrap">&euro;
-                                <?= number_format($cartProduct->price * $_SESSION['cart'][$cartProduct->id]['product_quantity'], 2);
+                                <?= number_format($cartProduct->getPrice() * $_SESSION['cart'][$cartProduct->getId()]['product_quantity'], 2);
                                 ?></span>
                         </li>
                     <?php
                     }
                     ?>
                     <li class="list-group-item d-flex justify-content-between">
+                        <span>Subtotal</span>
+                        <span class="text-muted">&euro; <?= $subtotal ?></span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
                         <span>Shipping</span>
-                        <span class="text-muted">&euro; 5.99</span>
+                        <span class="text-muted">&euro; <?= $shipping ?></span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
                         <span>Total (Euro)</span>
-                        <strong>&euro;
-                            <?= number_format($productService->getSubtotalPrice() + 5.99, 2); ?>
-                        </strong>
+                        <strong>&euro; <?= $total ?> </strong>
                     </li>
                     <?php
                 }
                 ?>
                 </ul>
-                <button class="btn btn-theme btn-lg btn-block text-white sticky-xl-top sticky-lg-top sticky-md-top"
-                        type="submit" onclick="confirmPurchase()" style="top: 320px;">Confirm Purchase</button>
+                <a class="btn btn-theme btn-lg btn-block text-white sticky-xl-top sticky-lg-top sticky-md-top"
+                        href="/cart/processpurchase" style="top: 320px;">Confirm Purchase</a>
             </div>
             <div class="col-md-7 order-md-1">
                 <h4 class="mb-3">Shipping address</h4>
                 <div id="confirm-view">
                     <div class="mb-3 d-flex flex-column">
                         <?php
-                        if (isset($_POST['shippingFirstName'])) { // Display shipping information, else billing info
+                        if (isset($_SESSION['confirmationData']['shippingFirstName'])) { // Display shipping information, else billing info
                         ?>
                         <row>
-                            <span><?= htmlspecialchars($_POST['shippingFirstName']) . " " .
-                                htmlspecialchars($_POST['shippingLastName']) ?></span>
+                            <span><?= htmlspecialchars($_SESSION['confirmationData']['shippingFirstName']) . " " .
+                                htmlspecialchars($_SESSION['confirmationData']['shippingLastName']) ?></span>
                         </row>
                         <row>
-                            <span><?= htmlspecialchars($_POST['shippingAddress']) . " " .
-                                htmlspecialchars($_POST['shippingAddress2']) ?></span>
+                            <span><?= htmlspecialchars($_SESSION['confirmationData']['shippingAddress']) . " " .
+                                htmlspecialchars($_SESSION['confirmationData']['shippingAddress2']) ?></span>
                         </row>
                         <row>
-                            <span><?= htmlspecialchars($_POST['shippingCity']) . ", " .
-                                htmlspecialchars($_POST['shippingState']) . " " .
-                                htmlspecialchars($_POST['shippingZip'])?> </span>
+                            <span><?= htmlspecialchars($_SESSION['confirmationData']['shippingCity']) . ", " .
+                                htmlspecialchars($_SESSION['confirmationData']['shippingState']) . " " .
+                                htmlspecialchars($_SESSION['confirmationData']['shippingZip'])?> </span>
                         </row>
                         <?php
                         } else { // Display billing
                         ?>
                         <row>
-                            <span><?= htmlspecialchars($_POST['billingFirstName']) . " " .
-                                htmlspecialchars($_POST['billingLastName']) ?></span>
+                            <span><?= htmlspecialchars($_SESSION['confirmationData']['billingFirstName']) . " " .
+                                htmlspecialchars($_SESSION['confirmationData']['billingLastName']) ?></span>
                         </row>
                         <row>
-                            <span><?= htmlspecialchars($_POST['billingAddress']) . " " .
-                                htmlspecialchars($_POST['billingAddress2']) ?></span>
+                            <span><?= htmlspecialchars($_SESSION['confirmationData']['billingAddress']) . " " .
+                                htmlspecialchars($_SESSION['confirmationData']['billingAddress2']) ?></span>
                         </row>
                         <row>
-                            <span><?= htmlspecialchars($_POST['billingCity']) . ", " .
-                                htmlspecialchars($_POST['billingState']) . " " .
-                                htmlspecialchars($_POST['billingZip'])?> </span>
+                            <span><?= htmlspecialchars($_SESSION['confirmationData']['billingCity']) . ", " .
+                                htmlspecialchars($_SESSION['confirmationData']['billingState']) . " " .
+                                htmlspecialchars($_SESSION['confirmationData']['billingZip'])?> </span>
                         </row>
                         <?php
                         }
@@ -128,38 +104,39 @@
                     <h4 class="mb-3">Payment method</h4>
                     <div class="mb-3 d-flex flex-column">
                         <?php
-                        if (isset($_POST['paymentMethod'])) { // If paid by debit/credit
-                            if ($_POST['paymentMethod'] == "creditCard" || $_POST['paymentMethod'] == "debitCard") {
+                        if (isset($_SESSION['confirmationData']['paymentMethod'])) { // If paid by debit/credit
+                            if ($_SESSION['confirmationData']['paymentMethod'] == "creditCard" ||
+                                $_SESSION['confirmationData']['paymentMethod'] == "debitCard") {
                             ?>
                             <row>
                                 <span><strong>Card ending in:
-                                    </strong><?= substr(htmlspecialchars($_POST['cardNumber']), -4) ?></span>
+                                    </strong><?= substr(htmlspecialchars($_SESSION['confirmationData']['cardNumber']), -4) ?></span>
                             </row>
                             <?php
                             } else { // Paypal
                                 ?>
                                 <row>
-                                    <span>Paypal: <?= htmlspecialchars($_POST['paypalEmail']) ?></span>
+                                    <span>Paypal: <?= htmlspecialchars($_SESSION['confirmationData']['paypalEmail']) ?></span>
                                 </row>
                                 <?php
                             }
                         }
                         ?>
                         <row>
-                            <span><?= htmlspecialchars($_POST['billingFirstName']) . " " .
-                                htmlspecialchars($_POST['billingLastName']) ?></span>
+                            <span><?= htmlspecialchars($_SESSION['confirmationData']['billingFirstName']) . " " .
+                                htmlspecialchars($_SESSION['confirmationData']['billingLastName']) ?></span>
                         </row>
                         <row>
-                            <span><?= htmlspecialchars($_POST['billingAddress']) . " " .
-                                htmlspecialchars($_POST['billingAddress2']) ?></span>
+                            <span><?= htmlspecialchars($_SESSION['confirmationData']['billingAddress']) . " " .
+                                htmlspecialchars($_SESSION['confirmationData']['billingAddress2']) ?></span>
                         </row>
                         <row>
-                            <span><?= htmlspecialchars($_POST['billingCity']) . ", " .
-                                htmlspecialchars($_POST['billingState']) . " " .
-                                htmlspecialchars($_POST['billingZip'])?> </span>
+                            <span><?= htmlspecialchars($_SESSION['confirmationData']['billingCity']) . ", " .
+                                htmlspecialchars($_SESSION['confirmationData']['billingState']) . " " .
+                                htmlspecialchars($_SESSION['confirmationData']['billingZip'])?> </span>
                         </row>
                         <row>
-                            <span><?= htmlspecialchars($_POST['billingPhoneNumber']) ?></span>
+                            <span><?= htmlspecialchars($_SESSION['confirmationData']['billingPhoneNumber']) ?></span>
                         </row>
                     </div>
                     <hr class="mb-4">

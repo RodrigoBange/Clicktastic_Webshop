@@ -1,9 +1,3 @@
-<?php
-if (!isset($_SESSION['logged_in'])) {
-    header("location: /login/login");
-    exit();
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,23 +19,23 @@ if (!isset($_SESSION['logged_in'])) {
                     <div class="row">
                         <div class="col-md-3 mb-3">
                             <label for="firstName">First name</label>
-                            <h5><strong><?php echo htmlspecialchars($user->first_name) ?></strong></h5>
+                            <h5><strong><?php echo htmlspecialchars($user->getFirstName()) ?></strong></h5>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="lastName">Last name</label>
-                            <h5><strong><?php echo htmlspecialchars($user->last_name) ?></strong></h5>
+                            <h5><strong><?php echo htmlspecialchars($user->getLastName()) ?></strong></h5>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="email">Email</label>
-                        <h5><strong><?php echo htmlspecialchars($user->email) ?></strong></h5>
+                        <h5><strong><?php echo htmlspecialchars($user->getEmail()) ?></strong></h5>
                     </div>
                     <div class="mb-3">
                         <label for="phone_number">Phone Number</label>
                         <h5><strong>
                             <?php
-                                if (!empty($user->phone_number)) {
-                                    echo htmlspecialchars($user->phone_number);
+                                if (!empty($user->getPhoneNumber())) {
+                                    echo htmlspecialchars($user->getPhoneNumber());
                                 } else {
                                     echo "-";
                                 }
@@ -53,8 +47,8 @@ if (!isset($_SESSION['logged_in'])) {
                         <label for="address">Address</label>
                         <h5><strong>
                                 <?php
-                                if (!empty($user->address)) {
-                                    echo htmlspecialchars($user->address);
+                                if (!empty($user->getAddress())) {
+                                    echo htmlspecialchars($user->getAddress());
                                 } else {
                                     echo "-";
                                 }
@@ -64,8 +58,8 @@ if (!isset($_SESSION['logged_in'])) {
                         <label for="address2"><span class="text-muted">Address 2 (Optional)</span></label>
                         <h5><strong>
                                 <?php
-                                if (!empty($user->address_optional)) {
-                                    echo htmlspecialchars($user->address_optional);
+                                if (!empty($user->getAddressOptional())) {
+                                    echo htmlspecialchars($user->getAddressOptional());
                                 } else {
                                     echo "-";
                                 }
@@ -75,8 +69,8 @@ if (!isset($_SESSION['logged_in'])) {
                         <label for="citytown">City / Town</label>
                         <h5><strong>
                                 <?php
-                                if (!empty($user->city)) {
-                                    echo htmlspecialchars($user->city);
+                                if (!empty($user->getCity())) {
+                                    echo htmlspecialchars($user->getCity());
                                 } else {
                                     echo "-";
                                 }
@@ -87,8 +81,8 @@ if (!isset($_SESSION['logged_in'])) {
                             <label for="country">Country</label>
                             <h5><strong>
                                     <?php
-                                    if (!empty($user->country)) {
-                                        echo htmlspecialchars($user->country);
+                                    if (!empty($user->getCountry())) {
+                                        echo htmlspecialchars($user->getCountry());
                                     } else {
                                         echo "-";
                                     }
@@ -98,8 +92,8 @@ if (!isset($_SESSION['logged_in'])) {
                             <label for="stateprovince">State / Province</label>
                             <h5><strong>
                                     <?php
-                                    if (!empty($user->state)) {
-                                        echo htmlspecialchars($user->state);
+                                    if (!empty($user->getState())) {
+                                        echo htmlspecialchars($user->getState());
                                     } else {
                                         echo "-";
                                     }
@@ -109,8 +103,8 @@ if (!isset($_SESSION['logged_in'])) {
                             <label for="zip">Zip</label>
                             <h5><strong>
                                     <?php
-                                    if (!empty($user->postal_code)) {
-                                        echo htmlspecialchars($user->postal_code);
+                                    if (!empty($user->getPostalCode())) {
+                                        echo htmlspecialchars($user->getPostalCode());
                                     } else {
                                         echo "-";
                                     }

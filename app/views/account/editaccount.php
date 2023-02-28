@@ -1,43 +1,12 @@
-<?php
-if (!isset($_SESSION['logged_in'])) {
-    header("location: /login/login");
-    exit();
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Checkout</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#updateForm').submit(function (e) {
-                e.preventDefault()
-
-                $.ajax({
-                    url: '/account/updateaccount',
-                    data: $(this).serialize(),
-                    dataType: "json",
-                    method: 'POST',
-                    success: function (reply) {
-                        var $warning;
-                        if (reply) {
-                            window.location.assign("/account/account");
-                        } else {
-                            $warning = $('#warning');
-                            if (warning.classList.contains('collapse')) {
-                                warning.classList.remove('collapse');
-                            }
-                        }
-                    },
-                    error: function (req, status, error) {
-                        console.log('Something went wrong: ', status, error, req);
-                    }
-                });
-            });
-        });
-    </script>
+    <script type="text/javascript" src="../../js/address_autocomplete.js" defer></script>
+    <script type="text/javascript" src="../../js/get_user_country.js" defer></script>
+    <script type="text/javascript" src="../../js/update_account.js" defer></script>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -54,28 +23,28 @@ if (!isset($_SESSION['logged_in'])) {
                         <div class="col-md-6 mb-3">
                             <label for="firstName">First name</label>
                             <input type="text" class="form-control" id="firstName"
-                                   placeholder="" value="<?php echo htmlspecialchars($user->first_name)?>"
-                                   name="firstName" required>
+                                   placeholder="" value="<?= htmlspecialchars($user->getFirstName())?>"
+                                   name="firstName" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="lastName">Last name</label>
                             <input type="text" class="form-control" id="lastName" placeholder=""
-                                   value="<?php echo htmlspecialchars($user->last_name)?>"
-                                   name="lastName" required>
+                                   value="<?= htmlspecialchars($user->getLastName())?>"
+                                   name="lastName" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="email">Email (Can't be changed)</label>
                         <input type="email" class="form-control" id="email"
-                               placeholder="<?php echo htmlspecialchars($user->email) ?>"
+                               placeholder="<?= htmlspecialchars($user->getEmail()) ?>"
                                name="email" disabled>
                     </div>
                     <div class="mb-3">
                         <label for="phone_number">Phone Number</label>
-                        <input type="text" class="form-control" id="phone_number"
+                        <input type="tel" class="form-control" id="phone_number"
                                placeholder="+31 6 12345678" value="<?php
-                                                                    if (!empty($user->phone_number)) {
-                                                                        echo htmlspecialchars($user->phone_number);
+                                                                    if (!empty($user->getPhoneNumber())) {
+                                                                        echo htmlspecialchars($user->getPhoneNumber());
                                                                     }
                                                                     ?>"
                                name="phoneNumber">
@@ -87,8 +56,8 @@ if (!isset($_SESSION['logged_in'])) {
                         <input type="text" class="form-control" id="address"
                                placeholder="Street address, P.O. box, company name" name="address"
                                value="<?php
-                                       if (!empty($user->address)) {
-                                           echo htmlspecialchars($user->address);
+                                       if (!empty($user->getAddress())) {
+                                           echo htmlspecialchars($user->getAddress());
                                        }
                                        ?>">
                     </div>
@@ -97,17 +66,17 @@ if (!isset($_SESSION['logged_in'])) {
                         <input type="text" class="form-control" id="address2"
                                placeholder="Apartment, suite, unit, building, floor, etc." name="address2"
                         value="<?php
-                                if (!empty($user->phone_number)) {
-                                    echo htmlspecialchars($user->address_optional);
+                                if (!empty($user->getPhoneNumber())) {
+                                    echo htmlspecialchars($user->getAddressOptional());
                                 }
                                 ?>">
                     </div>
                     <div class="mb-3">
                         <label for="citytown">City / Town</label>
-                        <input type="text" class="form-control" id="citytown" name="city"
+                        <input type="text" class="form-control" id="citytown" name="city" pattern="^[a-zA-Z][\sa-zA-Z]*"
                                value="<?php
-                                       if (!empty($user->city)) {
-                                           echo htmlspecialchars($user->city);
+                                       if (!empty($user->getCity())) {
+                                           echo htmlspecialchars($user->getCity());
                                        }
                                        ?>">
                     </div>
@@ -120,10 +89,10 @@ if (!isset($_SESSION['logged_in'])) {
                         <div class="col-md-4 mb-3">
                             <label for="stateprovince">State / Province</label>
                             <input type="text" class="form-control" id="stateprovince" placeholder=""
-                                   name="state"
+                                   name="state" pattern="^[a-zA-Z][\sa-zA-Z]*"
                                    value="<?php
-                                           if (!empty($user->state)) {
-                                               echo htmlspecialchars($user->state);
+                                           if (!empty($user->getState())) {
+                                               echo htmlspecialchars($user->getState());
                                            }
                                            ?>">
                         </div>
@@ -131,16 +100,16 @@ if (!isset($_SESSION['logged_in'])) {
                             <label for="zip">Zip</label>
                             <input type="text" class="form-control" id="zip" placeholder="" name="zip"
                                    value="<?php
-                                           if (!empty($user->postal_code)) {
-                                               echo htmlspecialchars($user->postal_code);
+                                           if (!empty($user->getPostalCode())) {
+                                               echo htmlspecialchars($user->getPostalCode());
                                            }
-                                           ?>">
+                                           ?>" >
                         </div>
                     </div>
                     <hr class="mb-4">
                     <button class="btn btn-theme btn-lg btn-block text-white" type="submit" name="update">
                         Update information</button>
-                    <div id="warning" class="collapse">
+                    <div id="warning" class="collapse mt-4">
                         <div class="alert alert-danger" role="alert">
                             An issue occurred, please try again.
                         </div>
@@ -151,29 +120,5 @@ if (!isset($_SESSION['logged_in'])) {
     </div>
 </main>
 <?php include_once(__DIR__ . '/../footer.php'); ?>
-<script type="text/javascript" src="../../js/address_autocomplete.js"></script>
-<Script type="text/javascript" defer>
-    <?php
-    if (isset($user->country)) {
-    ?>
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        async function timer() {
-            await sleep(1000);
-            setDefaultCountry();
-        }
-
-        function setDefaultCountry() {
-            var country = "<?php echo htmlspecialchars($user->country) ?>";
-            $('#country').val(country);
-        }
-
-        timer();
-    <?php
-    }
-    ?>
-</Script>
 </body>
 </html>

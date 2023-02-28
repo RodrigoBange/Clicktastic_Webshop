@@ -14,7 +14,10 @@
         <a class="btn btn-outline-light btn-lg" href="/shop/products">Shop now</a>
     </div>
 </header>
-<?php include_once(__DIR__ . '/../shop/newestproducts.php'); ?>
+<main class="container p-5 d-flex flex-column justify-content-center align-items-center">
+    <h3 class="pb-4">Oops! The requested link does not exist. Let's get you back on the path.</h3>
+    <a href="/" class="btn btn-theme text-white">Return Home</a>
+</main>
 <?php include_once(__DIR__ . '/../footer.php'); ?>
 </body>
 </html>

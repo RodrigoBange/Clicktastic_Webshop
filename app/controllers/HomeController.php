@@ -1,23 +1,26 @@
 <?php
 // Service
-require_once(__DIR__ . '/../services/UserService.php');
 require_once(__DIR__ . '/../services/ProductService.php');
-// Models
+
+// Model
 require_once(__DIR__ . '/../models/NavbarFunctions.php');
 
 class HomeController
 {
     private ProductService $productService;
-    private UserService $userService;
     private NavbarFunctions $navFunc;
+    private string $page;
 
     public function __construct()
     {
         $this->productService = new ProductService();
-        $this->userService = new UserService();
         $this->navFunc = new NavbarFunctions();
+        $this->page = 'home';
     }
 
+    /**
+     * Opens the home page
+     */
     public function index(): void
     {
         // Get the newest products to display
@@ -25,7 +28,9 @@ class HomeController
 
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
+        // Load the view
         require_once(__DIR__ . '/../views/home/index.php');
     }
 }

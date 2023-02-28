@@ -2,16 +2,17 @@
 <html lang="en">
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
-    <title>Processing order...</title>
-    <script type="text/javascript" src="../../js/confirm_purchase.js" defer></script>
+    <title>Success!</title>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
 <main class="pt-5 pb-5 bg-light d-flex align-items-center justify-content-center" style="min-height: 500px;">
     <div class="d-flex justify-content-center p-5 flex-column align-items-center">
-        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
-        </div>
-        <span class="pt-3">Processing your order...</span>
+        <em class="fa fa-check text-success" style="font-size: 2em;"></em>
+        <span class="pt-3 pb-3">Your order has been successfully processed!</span>
+        <a class="btn btn-theme text-white" href="/shop/products">Continue browsing</a>
+        <span class="p-2">or</span>
+        <a class="btn btn-theme text-white" href="/account/orders">Check your orders</a>
     </div>
 </main>
 <?php include_once(__DIR__ . '/../footer.php'); ?>

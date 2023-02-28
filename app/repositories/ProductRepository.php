@@ -1,12 +1,16 @@
 <?php
 // Repository
 require_once(__DIR__ . '/Repository.php');
+
 // Model
 require_once(__DIR__ . '/../models/Product.php');
 
 class ProductRepository extends Repository
 {
-    public function getProductById($id)
+    /**
+     * Gets a specific order by ID
+     */
+    public function getProductById(int $id): Product|null
     {
         try {
             $stmt = $this->connection->prepare("SELECT * FROM products WHERE id= :id");
@@ -20,19 +24,10 @@ class ProductRepository extends Repository
         }
     }
 
-    public function getAllProducts(): array|null
-    {
-        try {
-            $stmt = $this->connection->prepare("SELECT * FROM products");
-            $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Product');
-            return $stmt->fetchAll();
-        } catch (Exception $e) {
-            return null;
-        }
-    }
-
-    public function getProductCount()
+    /**
+     * Gets total product count
+     */
+    public function getProductCount(): int
     {
         try {
             $stmt = $this->connection->prepare("SELECT COUNT(*) as total FROM products");
@@ -43,7 +38,10 @@ class ProductRepository extends Repository
         }
     }
 
-    public function getProductCountByKeywords($query, $keywords)
+    /**
+     * Gets product count by specific keywords
+     */
+    public function getProductCountByKeywords(string $query, array $keywords): int
     {
         try {
             $stmt = $this->connection->prepare($query);
@@ -56,7 +54,10 @@ class ProductRepository extends Repository
         }
     }
 
-    public function getProductsByLimit($limit): array|null
+    /**
+     * Retrieves products within a specific limit
+     */
+    public function getProductsByLimit(int $limit): array|null
     {
         try {
             $stmt = $this->connection->prepare("SELECT * FROM products ORDER BY id DESC LIMIT :limit");
@@ -69,7 +70,10 @@ class ProductRepository extends Repository
         }
     }
 
-    public function getProductsByOffsetLimit($query, $values): bool|array|null
+    /**
+     * Retrieves products within a limit and offset
+     */
+    public function getProductsByOffsetLimit(string $query, array $values): bool|array|null
     {
         try {
             $stmt = $this->connection->prepare($query);
@@ -85,6 +89,9 @@ class ProductRepository extends Repository
         }
     }
 
+    /**
+     * Retrieves the top 3 newest products
+     */
     public function getNewestProducts(): array|null
     {
         try {
@@ -98,17 +105,16 @@ class ProductRepository extends Repository
         }
     }
 
-    public function getProductsOfOrder($id)
+    /**
+     * Retrieves all unique product company brands
+     */
+    public function getCompanies(): array|null
     {
         try {
-            $stmt = $this->connection->prepare("SELECT products.*, order_items.quantity FROM products INNER JOIN order_items 
-                                                ON products.id=order_items.product_id WHERE order_id = :id");
-            $stmt->bindParam(':id', $id);
+            $stmt = $this->connection->prepare("SELECT DISTINCT company FROM `products` ORDER BY company ASC");
             $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Product');
             return $stmt->fetchAll();
-        } catch (PDOException $e) {
-            error_log($e);
+        } catch (Exception $e) {
             return null;
         }
     }

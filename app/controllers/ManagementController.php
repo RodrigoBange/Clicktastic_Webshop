@@ -4,8 +4,8 @@ require_once(__DIR__ . '/../services/UserService.php');
 require_once(__DIR__ . '/../services/ProductService.php');
 require_once(__DIR__ . '/../services/OrderService.php');
 
-// Models
-require_once(__DIR__ . "/../models/NavbarFunctions.php");
+// Model
+require_once(__DIR__ . '/../models/NavbarFunctions.php');
 
 class ManagementController
 {
@@ -13,6 +13,7 @@ class ManagementController
     private ProductService $productService;
     private OrderService $orderService;
     private NavbarFunctions $navFunc;
+    private string $page;
 
     public function __construct()
     {
@@ -21,29 +22,30 @@ class ManagementController
         $this->productService = new ProductService();
         $this->orderService = new OrderService();
         $this->navFunc = new NavbarFunctions();
+        $this->page = 'management';
     }
 
+    /**
+     * Opens the management overview page
+     */
     public function overview() : void
     {
-        // Service
-        $productService = $this->productService;
-
-        // Get user information
-        $user = $this->userService->getUser($_SESSION['email']);
-
-        // Get all orders of user
-        $orders = $this->orderService->getAllOrders();
-
-        // Get order items
-        foreach ($orders as $order) {
-            $products = $this->productService->getProductsOfOrder($order->id);
-            $order->products[] = $products;
+        if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
+            header("location: /login/login");
+            return;
         }
+
+        // Get user information TODO: remove...
+        $user = $this->userService->unserializeUser();
+
+        // Get all orders
+        $orders = $this->orderService->getAllOrders();
 
         // Navigation Functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Load the view
-        require_once(__DIR__ . "/../views/account/orders.php");
+        require_once(__DIR__ . "/../views/management/overview.php");
     }
 }

@@ -39,8 +39,10 @@ class PatternRouter
             }
         } else {
             // Controller / method with url is not found
-            //http_response_code(404);
-            require_once(__DIR__ . '/../views/404.php');
+            http_response_code(404);
+            include_once(__DIR__ . '/../controllers/ErrorController.php');
+            $errorController = new ErrorController();
+            $errorController->error();
         }
     }
 }

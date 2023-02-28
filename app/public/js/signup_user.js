@@ -5,6 +5,29 @@ var modalAgain = document.getElementById("modal-again");
 var warning = document.getElementById('warning');
 
 /**
+ * Opens AJAX connection on form submit register user and display result
+ */
+$(document).ready(function() {
+    $('#registerForm').submit(function(e) {
+        e.preventDefault()
+
+        $.ajax({
+            url: '/login/signupuser',
+            data: $(this).serialize(),
+            dataType: "json",
+            method: 'POST',
+            success: function(reply) {
+                displayRegisterModal(reply.registerSuccess, reply.emailExists);
+            },
+            error: function(req, status, error) {
+                displayRegisterModal(false, false);
+                console.log( 'Something went wrong: ', status, error, req );
+            }
+        });
+    });
+});
+
+/**
  * Checks if the registration password is valid and displays a warning message
  * @param passwordField The password input field
  */
