@@ -1,13 +1,25 @@
-function confirmPurchase(userinfo) {
+// Wait before executing autofill of country
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function timer() {
+    await sleep(3000);
+    process();
+}
+
+function process() {
     $.ajax({
-        type: 'POST',
-        url: '/cart/processpurchase',
-        data: {
-            data: userinfo
-    },
+        url: '/cart/processment',
     success: function(reply) {
-        // If all good, navigate to success screen
-        console.log("success" + reply)
+        var result = JSON.parse(reply);
+
+        if (result === true) // Purchase successful
+        {
+            window.location.assign("/cart/paymentsuccess");
+        } else { // Purchase failed
+            window.location.assign("/cart/paymentfailure");
+        }
     },
     error: function(req, status, error) {
         // Display error
@@ -15,3 +27,5 @@ function confirmPurchase(userinfo) {
     }
 });
 }
+
+timer();

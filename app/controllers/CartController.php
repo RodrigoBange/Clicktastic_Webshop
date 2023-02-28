@@ -26,6 +26,9 @@ class CartController
         $this->navFunc = new NavbarFunctions();
     }
 
+    /**
+     * Opens the shopping cart overview
+     */
     public function shoppingcart(): void
     {
         // Navigation functions
@@ -43,6 +46,9 @@ class CartController
         require_once(__DIR__ . '/../views/cart/shoppingcart.php');
     }
 
+    /**
+     * Opens the checkout page
+     */
     public function checkout(): void
     {
         // If cart is empty, return to shoppingcart instead
@@ -69,10 +75,17 @@ class CartController
         require_once(__DIR__ . '/../views/cart/checkout.php');
     }
 
+    /**
+     * Opens the confirmation page
+     */
     public function confirmation(): void
     {
+        if (isset($_POST['submit'])) { // Save POST for processing
+                $_SESSION['confirmationData'] = $_POST;
+        }
+
         // If cart is empty or post is incomplete, return to shopping cart instead
-        if (empty($_SESSION['cart']) || !isset($_POST['billingFirstName'])) {
+        if (empty($_SESSION['cart']) || empty($_SESSION['confirmationData'])) {
             header('location: /cart/shoppingcart');
             return;
         }
@@ -92,6 +105,9 @@ class CartController
         require_once(__DIR__ . '/../views/cart/confirmation.php');
     }
 
+    /**
+     * AJAX, adds an item to the cart and returns the new count
+     */
     public function addtocart(): void
     {
         // Add product to cart
@@ -101,15 +117,60 @@ class CartController
         echo $this->navFunc->getCount();
     }
 
+    /**
+     * AJAX, updates the cart
+     */
     public function editcart(): void
     {
         // Update cart
-        $this->cartService->editCart($this->navFunc, $this->productService);
+        echo json_encode($this->cartService->editCart($this->navFunc, $this->productService));
     }
 
+    /**
+     * Opens the purchase processing page
+     */
     public function processpurchase(): void
     {
+        // Navigation functions
+        $navFunc = $this->navFunc;
+
+        // Load the view
+        require_once(__DIR__ . '/../views/cart/processpurchase.php');
+    }
+
+    /**
+     * AJAX, processes the payment
+     */
+    public function processment(): void
+    {
         // Process purchase
-        $this->orderService->processPurchase();
+        echo json_encode($this->orderService->processPurchase($this->userService, $this->productService));
+    }
+
+    /**
+     * Opens the successful payment page
+     */
+    public function paymentsuccess(): void
+    {
+        // Navigation functions
+        $navFunc = $this->navFunc;
+
+        // Empties information
+        $this->cartService->emptyCart();
+
+        // Load the view
+        require_once(__DIR__ . '/../views/cart/paymentsuccess.php');
+    }
+
+    /**
+     * Opens the failure payment page
+     */
+    public function paymentfailure(): void
+    {
+        // Navigation functions
+        $navFunc = $this->navFunc;
+
+        // Load the view
+        require_once(__DIR__ . '/../views/cart/paymentfailure.php');
     }
 }

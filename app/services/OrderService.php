@@ -14,20 +14,20 @@ class OrderService
     /**
      * Processes the purchase info before creating the order
      */
-    public function processPurchase(UserService $userService, ProductService $productService): void
+    public function processPurchase(UserService $userService, ProductService $productService): bool
     {
         $result = false;
 
-        if (isset($_POST['data']['billingEmail'])) {
+        if (isset($_SESSION['confirmationData']['billingEmail'])) {
             // Get user info in array
             $userInfo = $this->convertUserInfo();
 
             // Check if customer exists & get the customer id
-            if (!$userService->isPrevCustomer($_POST['data']['billingEmail'])) {
+            if (!$userService->isPrevCustomer($_SESSION['confirmationData']['billingEmail'])) {
                 // If customer hasn't purchased something before, register customer info
                 $userService->registerCustomer($userInfo);
             }
-            $customerId = $userService->getUserId($_POST['data']['billingEmail']);
+            $customerId = $userService->getUserId($_SESSION['confirmationData']['billingEmail']);
 
             if ($customerId != 0) { // If customer exists, create order
                 $items = $_SESSION['cart'];
@@ -39,7 +39,7 @@ class OrderService
                 $result = $this->createOrder($customerId, $orderInfo, $items);
             }
         }
-        echo json_encode($result);
+        return $result;
     }
 
     /**
@@ -48,16 +48,16 @@ class OrderService
     private function convertUserInfo(): array
     {
         return array(
-            'email' => $_POST['data']['billingEmail'],
-            'phone_number' => $_POST['data']['billingPhoneNumber'],
-            'first_name' => $_POST['data']['billingFirstName'],
-            'last_name' => $_POST['data']['billingLastName'],
-            'address' => $_POST['data']['billingAddress'],
-            'address_optional' => $_POST['data']['billingAddress2'],
-            'city' => $_POST['data']['billingCity'],
-            'state' => $_POST['data']['billingState'],
-            'postal_code' => $_POST['data']['billingZip'],
-            'country' => $_POST['data']['billingCountry'],
+            'email' => $_SESSION['confirmationData']['billingEmail'],
+            'phone_number' => $_SESSION['confirmationData']['billingPhoneNumber'],
+            'first_name' => $_SESSION['confirmationData']['billingFirstName'],
+            'last_name' => $_SESSION['confirmationData']['billingLastName'],
+            'address' => $_SESSION['confirmationData']['billingAddress'],
+            'address_optional' => $_SESSION['confirmationData']['billingAddress2'],
+            'city' => $_SESSION['confirmationData']['billingCity'],
+            'state' => $_SESSION['confirmationData']['billingState'],
+            'postal_code' => $_SESSION['confirmationData']['billingZip'],
+            'country' => $_SESSION['confirmationData']['billingCountry'],
         );
     }
 
@@ -66,31 +66,34 @@ class OrderService
      */
     public function getOrderInfo(ProductService $productService): array
     {
-        if (isset($_POST['data']['shippingAddress'])) {
+        if (isset($_SESSION['confirmationData']['shippingAddress'])) {
             return array(
-                'address' => $_POST['data']['shippingAddress'],
-                'address_optional' => $_POST['data']['shippingAddress2'],
-                'city' => $_POST['data']['shippingCity'],
-                'state' => $_POST['data']['shippingState'],
-                'postal_code' => $_POST['data']['shippingZip'],
-                'country' => $_POST['data']['shippingCountry'],
-                'phone_number' => $_POST['data']['billingPhoneNumber'],
+                'address' => $_SESSION['confirmationData']['shippingAddress'],
+                'address_optional' => $_SESSION['confirmationData']['shippingAddress2'],
+                'city' => $_SESSION['confirmationData']['shippingCity'],
+                'state' => $_SESSION['confirmationData']['shippingState'],
+                'postal_code' => $_SESSION['confirmationData']['shippingZip'],
+                'country' => $_SESSION['confirmationData']['shippingCountry'],
+                'phone_number' => $_SESSION['confirmationData']['billingPhoneNumber'],
                 'total' => $productService->getTotalPrice()
             );
         } else {
             return array(
-                'address' => $_POST['data']['billingAddress'],
-                'address_optional' => $_POST['data']['billingAddress2'],
-                'city' => $_POST['data']['billingCity'],
-                'state' => $_POST['data']['billingState'],
-                'postal_code' => $_POST['data']['billingZip'],
-                'country' => $_POST['data']['billingCountry'],
-                'phone_number' => $_POST['data']['billingPhoneNumber'],
+                'address' => $_SESSION['confirmationData']['billingAddress'],
+                'address_optional' => $_SESSION['confirmationData']['billingAddress2'],
+                'city' => $_SESSION['confirmationData']['billingCity'],
+                'state' => $_SESSION['confirmationData']['billingState'],
+                'postal_code' => $_SESSION['confirmationData']['billingZip'],
+                'country' => $_SESSION['confirmationData']['billingCountry'],
+                'phone_number' => $_SESSION['confirmationData']['billingPhoneNumber'],
                 'total' => $productService->getTotalPrice()
             );
         }
     }
 
+    /**
+     * Creates a new order
+     */
     public function createOrder(int $customerId, $orderInfo, $items) : bool
     {
         try {
@@ -107,12 +110,18 @@ class OrderService
         return true;
     }
 
+    /**
+     * Gets orders from a specific customer
+     */
     public function getOrdersByCustomerId(int $id): array|null
     {
         return $this->orderRepository->getOrdersById($id);
     }
 
-    public function getAllOrders()
+    /**
+     * Gets all orders from all customers
+     */
+    public function getAllOrders(): bool|array|null
     {
         return $this->orderRepository->getAllOrders();
     }

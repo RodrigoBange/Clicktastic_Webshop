@@ -72,7 +72,7 @@ class UserService
     /**
      * Registers a new user to the database
      */
-    public function registerUser($email, $firstname, $lastname, $password): bool
+    public function registerUser(string $email, string $firstname, string $lastname, string $password): bool
     {
         // Hash password
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -102,7 +102,7 @@ class UserService
     /**
      * Checks if email belongs to unregistered customer
      */
-    public function isPrevCustomer($email): bool
+    public function isPrevCustomer(string $email): bool
     {
         return $this->userRepository->emailExists($email);
     }
@@ -110,7 +110,7 @@ class UserService
     /**
      * Checks if the user already exists.
      */
-    public function userExists($email): bool
+    public function userExists(string $email): bool
     {
         // return true or false
         return $this->userRepository->userExists($email);
@@ -119,11 +119,14 @@ class UserService
     /**
      * Register a customer's info (Not a user)
      */
-    public function registerCustomer($userInfo): bool
+    public function registerCustomer(array $userInfo): bool
     {
         return $this->userRepository->registerCustomer($userInfo);
     }
 
+    /**
+     * Retrieves all users
+     */
     public function getAll(): array|null
     {
         $users = $this->userRepository->getAll();
@@ -134,17 +137,26 @@ class UserService
         return null;
     }
 
-    public function getUserId($email)
+    /**
+     * Gets a specific user's ID by email
+     */
+    public function getUserId(string $email)
     {
         return $this->userRepository->getUserId($email);
     }
 
-    public function getUser($email)
+    /**
+     * Gets a specific user by email
+     */
+    public function getUser(string $email)
     {
         return $this->userRepository->getUser($email);
     }
 
-    public function updateUser($user): bool
+    /**
+     * Updates a user's information
+     */
+    public function updateUser(User $user): bool
     {
         $result = false;
 
@@ -177,6 +189,9 @@ class UserService
         return $result;
     }
 
+    /**
+     * Unserializes the user session value to a user object
+     */
     public function unserializeUser()
     {
         if (!isset($_SESSION['user'])) {

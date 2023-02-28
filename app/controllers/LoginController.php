@@ -2,7 +2,7 @@
 // Service
 require_once(__DIR__ . '/../services/UserService.php');
 
-// Models
+// Model
 require_once(__DIR__ . '/../models/NavbarFunctions.php');
 
 class LoginController
@@ -16,8 +16,16 @@ class LoginController
         $this->navFunc = new NavbarFunctions();
     }
 
+    /**
+     * Opens the login page
+     */
     public function login(): void
     {
+        if (isset($_SESSION['user'])) {
+            header("location: /account/account");
+            return;
+        }
+
         // Navigation functions
         $navFunc = $this->navFunc;
 
@@ -25,6 +33,9 @@ class LoginController
         require_once(__DIR__ . '/../views/login/login.php');
     }
 
+    /**
+     * AJAX, logs in the user
+     */
     public function loginuser(): void
     {
         // Attempt to log in user and return bool
@@ -34,8 +45,16 @@ class LoginController
         echo json_encode($result);
     }
 
+    /**
+     * Opens the sign up page
+     */
     public function signup(): void
     {
+        if (isset($_SESSION['user'])) {
+            header("location: /account/account");
+            return;
+        }
+
         // Navigation functions
         $navFunc = $this->navFunc;
 
@@ -43,6 +62,9 @@ class LoginController
         require_once(__DIR__ . '/../views/login/signup.php');
     }
 
+    /**
+     * AJAX, signs up the new user
+     */
     public function signupuser(): void
     {
         // Sign up user
@@ -52,8 +74,12 @@ class LoginController
         echo json_encode($result);
     }
 
+    /**
+     * AJAX, logs out the user
+     */
     public function logout(): void
     {
+        // Log out the user
         $this->userService->logoutUser();
     }
 }

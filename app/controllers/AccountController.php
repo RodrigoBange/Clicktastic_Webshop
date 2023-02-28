@@ -4,7 +4,7 @@ require_once(__DIR__ . '/../services/UserService.php');
 require_once(__DIR__ . '/../services/ProductService.php');
 require_once(__DIR__ . '/../services/OrderService.php');
 
-// Models
+// Model
 require_once(__DIR__ . '/../models/NavbarFunctions.php');
 
 class AccountController
@@ -23,6 +23,9 @@ class AccountController
         $this->navFunc = new NavbarFunctions();
     }
 
+    /**
+     * Opens the account overview page
+     */
     public function account() : void
     {
         // If user is not logged in, direct to login page
@@ -41,6 +44,9 @@ class AccountController
         require_once(__DIR__ . '/../views/account/account.php');
     }
 
+    /**
+     * Opens the account edit page
+     */
     public function editaccount() : void
     {
         // If user is not logged in, direct to login page
@@ -59,6 +65,9 @@ class AccountController
         require_once(__DIR__ . '/../views/account/editaccount.php');
     }
 
+    /**
+     * AJAX, updates account and echo's the result
+     */
     public function updateaccount() : void
     {
         // Get user object
@@ -67,8 +76,17 @@ class AccountController
         echo json_encode($this->userService->updateUser($user));
     }
 
+    /**
+     * Opens the order overview page
+     */
     public function orders() : void
     {
+        // If user is not logged in, direct to login page
+        if (!isset($_SESSION['user'])) {
+            header('location: /login/login');
+            return;
+        }
+
         // Service
         $productService = $this->productService;
 
@@ -91,6 +109,9 @@ class AccountController
         require_once(__DIR__ . '/../views/account/orders.php');
     }
 
+    /**
+     * AJAX, gets the user's country
+     */
     public function getcountry(): void {
         // Get user object
         $user = $this->userService->unserializeUser();

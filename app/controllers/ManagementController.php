@@ -4,7 +4,7 @@ require_once(__DIR__ . '/../services/UserService.php');
 require_once(__DIR__ . '/../services/ProductService.php');
 require_once(__DIR__ . '/../services/OrderService.php');
 
-// Models
+// Model
 require_once(__DIR__ . "/../models/NavbarFunctions.php");
 
 class ManagementController
@@ -23,6 +23,9 @@ class ManagementController
         $this->navFunc = new NavbarFunctions();
     }
 
+    /**
+     * Opens the management overview page
+     */
     public function overview() : void
     {
         // Service

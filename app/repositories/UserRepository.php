@@ -1,12 +1,16 @@
 <?php
 // Repository
 require_once(__DIR__ . '/Repository.php');
+
 // Model
 require_once(__DIR__ . '/../models/User.php');
 
 class UserRepository extends Repository
 {
-    public function getAll() : ?array
+    /**
+     * Retrieves all users
+     */
+    public function getAll(): ?array
     {
         try {
             $stmt = $this->connection->prepare("SELECT * FROM users");
@@ -17,10 +21,12 @@ class UserRepository extends Repository
             echo $e->getMessage();
             return null;
         }
-
     }
 
-    public function getUser($email)
+    /**
+     * Gets a specific user by email
+     */
+    public function getUser(string $email): User|null
     {
         try {
             $stmt = $this->connection->prepare("SELECT * FROM users WHERE email= :email");
@@ -35,7 +41,10 @@ class UserRepository extends Repository
         }
     }
 
-    public function userExists($email) : bool
+    /**
+     * Checks if a user exists by email
+     */
+    public function userExists(string $email): bool
     {
         try {
             $stmt = $this->connection->prepare("SELECT * FROM users WHERE email= :email AND 'password' IS NOT NULL");
@@ -48,7 +57,10 @@ class UserRepository extends Repository
         }
     }
 
-    public function emailExists($email) : bool
+    /**
+     * Checks if an email already exists
+     */
+    public function emailExists(string $email): bool
     {
         try {
             $stmt = $this->connection->prepare("SELECT * FROM users WHERE email= :email");
@@ -61,7 +73,10 @@ class UserRepository extends Repository
         }
     }
 
-    public function registerUser($email, $firstname, $lastname, $password) : bool
+    /**
+     * Registers a new user
+     */
+    public function registerUser(string $email, string $firstname, string $lastname, string $password): bool
     {
         try {
             $stmt = $this->connection->prepare("INSERT INTO users (email, password, first_name, last_name, is_admin)" .
@@ -81,7 +96,7 @@ class UserRepository extends Repository
     /**
      * Register a customer's information without password (When placing an order without logging in)
      */
-    public function registerCustomer($userInfo) : bool
+    public function registerCustomer($userInfo): bool
     {
         try {
             $stmt = $this->connection->prepare(
@@ -97,7 +112,10 @@ class UserRepository extends Repository
         }
     }
 
-    public function addPassword($password, $email) : bool
+    /**
+     * Adds a password to an existing email (for customers without account)
+     */
+    public function addPassword($password, $email): bool
     {
         try {
             $stmt = $this->connection->prepare("UPDATE users SET 'password' = :password WHERE email= :email");
@@ -111,7 +129,10 @@ class UserRepository extends Repository
         }
     }
 
-    public function getUserId($email)
+    /**
+     * Gets user ID
+     */
+    public function getUserId(string $email): int
     {
         $stmt = $this->connection->prepare("SELECT * FROM users WHERE email= :email");
         $stmt->bindParam(':email', $email);
@@ -119,7 +140,10 @@ class UserRepository extends Repository
         return $stmt->fetchColumn();
     }
 
-    public function updateUser($userInfo) : bool
+    /**
+     * Updates an existing user with new information
+     */
+    public function updateUser(array $userInfo) : bool
     {
         try {
             $stmt = $this->connection->prepare("UPDATE users SET first_name = :first_name, last_name = :last_name,

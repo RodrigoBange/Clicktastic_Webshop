@@ -2,6 +2,9 @@
 
 class CartService
 {
+    /**
+     * Checks if a cart exists, or creates a session value for it
+     */
     public function cartExists(): void
     {
         if (!isset($_SESSION['cart'])) {
@@ -10,6 +13,9 @@ class CartService
         }
     }
 
+    /**
+     * Adds a product to the cart
+     */
     public function addToCart(): void
     {
         // Create cart if it doesn't exist yet
@@ -40,6 +46,9 @@ class CartService
         }
     }
 
+    /**
+     * Edits the cart with products or removes products.
+     */
     public function editCart(NavbarFunctions $navFunc, ProductService $productService)
     {
         // Create cart if it doesn't exist yet
@@ -75,13 +84,23 @@ class CartService
             $cartEmpty = empty($_SESSION['cart']);
 
             // Return new values
-            $replies = array(
+            return array(
                 'deleteProduct' => $deleteProduct,
                 'totalQuantity' => $totalQuantity,
                 'subTotal' => $subTotal,
                 'cartEmpty' => $cartEmpty
             );
-            echo json_encode($replies);
         }
+    }
+
+    /**
+     * Empties the cart and overview data
+     * Called after a successful payment
+     */
+    public function emptyCart(): void
+    {
+        // Empties cart & overview data
+        unset($_SESSION['cart']);
+        unset($_SESSION['confirmationData']);
     }
 }

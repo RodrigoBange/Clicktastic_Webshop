@@ -1,9 +1,3 @@
-<?php
-    if (isset($_SESSION['logged_in'])) {
-        header("location: /account/account");
-        exit();
-    }
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

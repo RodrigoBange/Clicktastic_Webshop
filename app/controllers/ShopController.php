@@ -8,8 +8,8 @@ require_once(__DIR__ . '/../models/NavbarFunctions.php');
 
 class ShopController
 {
-    private $productService;
-    private $navFunc;
+    private ProductService $productService;
+    private NavbarFunctions $navFunc;
 
     public function __construct()
     {
@@ -71,7 +71,7 @@ class ShopController
     }
 
     /**
-     * AJAX page, loads products by search and filter data
+     * AJAX, loads products by search and filter data
      */
     public function getproducts(): void
     {
@@ -81,6 +81,7 @@ class ShopController
         // Get pagination
         $pagination = $this->productService->getFilterPagination();
 
+        // Load the view
         require_once(__DIR__ . '/../views/shop/getproducts.php');
     }
 }

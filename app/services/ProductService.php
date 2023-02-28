@@ -18,15 +18,13 @@ class ProductService
     /**
      * Retrieves a product by ID.
      */
-    public function getProductById($id)
+    public function getProductById(int $id)
     {
-        // Return product by ID if valid int has been given
-        if (is_int((int)$id)) {
-            $product = $this->productRepository->getProductById($id);
+        // Return product by ID
+        $product = $this->productRepository->getProductById($id);
 
-            if ($product != null) {
-                return $product;
-            }
+        if ($product != null) {
+            return $product;
         }
         return null;
     }
@@ -85,7 +83,7 @@ class ProductService
     /**
      * Retrieves all products within limit.
      */
-    public function getProductsByLimit($limit): ?array
+    public function getProductsByLimit(int $limit): ?array
     {
         $products = $this->productRepository->getProductsByLimit($limit);
 
@@ -98,7 +96,7 @@ class ProductService
     /**
      * Retrieves all products within offset, limit and by where clause.
      */
-    public function getProductsByOffsetLimit($keywords, $filters, $offset, $limit): ?array
+    public function getProductsByOffsetLimit($keywords, $filters, int $offset, int $limit): ?array
     {
         $query = "";
         $query .= $this->buildWhereQuery($keywords, $filters);
@@ -116,6 +114,9 @@ class ProductService
         return null;
     }
 
+    /**
+     * Retrieves the newest added products
+     */
     public function getNewestProducts(): ?array
     {
         $products = $this->productRepository->getNewestProducts();
@@ -126,6 +127,9 @@ class ProductService
         return null;
     }
 
+    /**
+     * Gets all cart products
+     */
     public function getCartProducts() : array
     {
         $cartProducts = array();
@@ -141,6 +145,9 @@ class ProductService
         return $cartProducts;
     }
 
+    /**
+     * Gets the subtotal price of all items
+     */
     public function getSubtotalPrice(): float|int
     {
         $subtotal = 0;
@@ -155,23 +162,35 @@ class ProductService
         return number_format($subtotal,2);
     }
 
+    /**
+     * Gets the total price of all items and extra costs
+     */
     public function getTotalPrice(): float|int
     {
         // Calculate subtotal plus shipping cost
         return number_format($this->getSubtotalPrice() + $this->getShippingCost(), 2);
     }
 
+    /**
+     * Gets the shipping cost price
+     */
     public function getShippingCost(): float|int
     {
         // Returns formatted shipping cost
         return number_format(5.99, 2);
     }
 
-    public function getProductsOfOrder($id): array|null
+    /**
+     * Gets all products of a specific order
+     */
+    public function getProductsOfOrder(int $id): array|null
     {
         return $this->productRepository->getProductsOfOrder($id);
     }
 
+    /**
+     * Gets products by a custom filter
+     */
     public function getFilteredProducts()
     {
         if (isset($_POST['page'])) {
@@ -199,6 +218,9 @@ class ProductService
         }
     }
 
+    /**
+     * Creates the pagination fitting with the filter
+     */
     public function getFilterPagination()
     {
         if (isset($_POST['page'])) {
