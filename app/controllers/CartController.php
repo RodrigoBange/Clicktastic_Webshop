@@ -15,6 +15,7 @@ class CartController
     private UserService $userService;
     private OrderService $orderService;
     private NavbarFunctions $navFunc;
+    private string $page;
 
     public function __construct()
     {
@@ -24,6 +25,7 @@ class CartController
         $this->userService = new UserService();
         $this->orderService = new OrderService();
         $this->navFunc = new NavbarFunctions();
+        $this->page = 'cart';
     }
 
     /**
@@ -33,6 +35,7 @@ class CartController
     {
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Get data of products in shopping cart to load into view
         $cartProducts = $this->productService->getCartProducts();
@@ -59,6 +62,7 @@ class CartController
 
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Get data of products in shopping cart to load into view
         $cartProducts = $this->productService->getCartProducts();
@@ -92,6 +96,7 @@ class CartController
 
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Get datta of products in shopping cart to load into view
         $cartProducts = $this->productService->getCartProducts();
@@ -133,6 +138,7 @@ class CartController
     {
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Load the view
         require_once(__DIR__ . '/../views/cart/processpurchase.php');
@@ -154,6 +160,7 @@ class CartController
     {
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Empties information
         $this->cartService->emptyCart();
@@ -169,6 +176,7 @@ class CartController
     {
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Load the view
         require_once(__DIR__ . '/../views/cart/paymentfailure.php');

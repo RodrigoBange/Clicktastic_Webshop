@@ -30,19 +30,6 @@ class ProductService
     }
 
     /**
-     * Retrieves all products.
-     */
-    public function getAllProducts(): ?array
-    {
-        $products = $this->productRepository->getAllProducts();
-
-        if ($products != null) {
-            return $products;
-        }
-        return null;
-    }
-
-    /**
      * Retrieves the total product count.
      */
     public function getProductCount($keywords, $filters)
@@ -192,36 +179,36 @@ class ProductService
     /**
      * Gets the subtotal price of all items
      */
-    public function getSubtotalPrice(): float|int
+    public function getSubtotalPrice(): float
     {
-        $subtotal = 0;
+        $subtotal = 0.00;
 
         // Calculate subtotal by quantity * price of each added product
         if (isset($_SESSION['cart'])) {
             foreach ($_SESSION['cart'] as $key => $value) {
-                $subtotal += $value['product_quantity'] * $value['product_price'];
+                $subtotal +=
+                    (int)$value['product_quantity'] * (float)$value['product_price'];
             }
         }
-
-        return number_format($subtotal,2);
+        return round($subtotal, 2);
     }
 
     /**
      * Gets the total price of all items and extra costs
      */
-    public function getTotalPrice(): float|int
+    public function getTotalPrice(): float
     {
         // Calculate subtotal plus shipping cost
-        return number_format($this->getSubtotalPrice() + $this->getShippingCost(), 2);
+        return round($this->getSubtotalPrice() + $this->getShippingCost(), 2);
     }
 
     /**
      * Gets the shipping cost price
      */
-    public function getShippingCost(): float|int
+    public function getShippingCost(): float
     {
         // Returns formatted shipping cost
-        return number_format(5.99, 2);
+        return round(5.99, 2);
     }
 
     /**

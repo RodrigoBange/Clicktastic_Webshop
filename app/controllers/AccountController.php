@@ -13,6 +13,7 @@ class AccountController
     private ProductService $productService;
     private OrderService $orderService;
     private NavbarFunctions $navFunc;
+    private string $page;
 
     public function __construct()
     {
@@ -21,6 +22,7 @@ class AccountController
         $this->productService = new ProductService();
         $this->orderService = new OrderService();
         $this->navFunc = new NavbarFunctions();
+        $this->page = 'account';
     }
 
     /**
@@ -39,6 +41,7 @@ class AccountController
 
         // Navigation Functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Load the view
         require_once(__DIR__ . '/../views/account/account.php');
@@ -60,6 +63,7 @@ class AccountController
 
         // Navigation Functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Load the view
         require_once(__DIR__ . '/../views/account/editaccount.php');
@@ -95,6 +99,7 @@ class AccountController
 
         // Navigation Functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Load the view
         require_once(__DIR__ . '/../views/account/orders.php');

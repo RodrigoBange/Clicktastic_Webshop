@@ -8,14 +8,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav">
-                <a href="/" class="nav-item nav-link active">Home</a>
-                <a href="/shop/products" class="nav-item nav-link">Shop</a>
+                <a href="/" class="nav-item nav-link <?= $page == 'home' ? 'active' : ''?>">Home</a>
+                <a href="/shop/products" class="nav-item nav-link <?= $page == 'shop' ? 'active' : ''?>">Shop</a>
                 <?php
-                $navFunc->management();
+                $navFunc->management($page);
                 ?>
             </div>
             <div class="navbar-nav ms-auto">
-                <a href="/cart/shoppingcart" class="nav-item nav-link">
+                <a href="/cart/shoppingcart" class="nav-item nav-link <?= $page == 'cart' ? 'active' : ''?>">
                     <i class="fa fa-shopping-basket"></i>
                     <span id="cartcount">
                         <?php
@@ -24,7 +24,7 @@
                     </span>
                 </a>
                 <?php
-                $navFunc->displayUser();
+                $navFunc->displayUser($page);
                 ?>
             </div>
         </div>

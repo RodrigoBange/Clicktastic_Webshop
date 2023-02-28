@@ -21,12 +21,12 @@ class NavbarFunctions
     /**
      * Sets up the username and its href
      */
-    public function displayUser() : void
+    public function displayUser($page) : void
     {
         if (isset($_SESSION['user'])) {
             ?>
-            <a href="/account/orders" class="nav-item nav-link">Orders</a>
-            <a href="/account/account" class="nav-item nav-link">
+            <a href="/account/orders" class="nav-item nav-link <?= $page == 'orders' ? 'active' : ''?>">Orders</a>
+            <a href="/account/account" class="nav-item nav-link <?= $page == 'account' ? 'active' : ''?>">
                 <?php
                 echo "Hello, " . htmlspecialchars($_SESSION['display_name']);
                 ?>
@@ -35,7 +35,7 @@ class NavbarFunctions
             <?php
         } else {
             ?>
-            <a href="/login/login" class="nav-item nav-link">Login</a>
+            <a href="/login/login" class="nav-item nav-link <?= $page == 'login' ? 'active' : ''?>">Login</a>
             <?php
         }
     }
@@ -43,11 +43,11 @@ class NavbarFunctions
     /**
      * Creates the links for management functionality
      */
-    public function management() : void
+    public function management($page) : void
     {
         if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']) {
             ?>
-            <a href="/management/overview" class="nav-item nav-link">Management</a>
+            <a href="/management/overview" class="nav-item nav-link <?= $page == 'management' ? 'active' : ''?>">Management</a>
             <?php
         }
     }

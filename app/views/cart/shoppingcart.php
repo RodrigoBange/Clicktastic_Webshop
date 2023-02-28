@@ -3,7 +3,7 @@
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Your item overview</title>
-    <script type="text/javascript" src="../../js/edit_cart.js"></script>
+    <script type="text/javascript" src="../../js/edit_cart.js" defer></script>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -58,6 +58,7 @@
                                                            echo $_SESSION['cart'][$cartProduct->getId()]['product_quantity'];
                                                            ?>" min="0" max="10" onchange="editQuantity(this)"
                                                                class="form-control quantity-input">
+                                                        <p>* 10 p. item p. order</p>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <h5 class="fw-semibold pt-4 mt-1">&euro;

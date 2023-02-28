@@ -24,7 +24,7 @@ class CartService
         if (isset($_GET['product_id']) && isset($_GET['product_price']) && isset($_GET['product_quantity'])) {
             // Get values
             $product_id = (int)$_GET['product_id'];
-            $product_price = (double)$_GET['product_price'];
+            $product_price = number_format((float)$_GET['product_price'],2);
             $product_quantity = (int)$_GET['product_quantity'];
 
             // Check if item doesn't exist, add new product
@@ -81,6 +81,7 @@ class CartService
             // Get new values
             $totalQuantity = $navFunc->getCount();
             $subTotal = $productService->getSubtotalPrice();
+            $total = $productService->getTotalPrice();
             $cartEmpty = empty($_SESSION['cart']);
 
             // Return new values
@@ -88,6 +89,7 @@ class CartService
                 'deleteProduct' => $deleteProduct,
                 'totalQuantity' => $totalQuantity,
                 'subTotal' => $subTotal,
+                'total' => $total,
                 'cartEmpty' => $cartEmpty
             );
         }

@@ -1,7 +1,19 @@
 function editQuantity($button) {
     // Get number of ID and new quantity
     const $id = $button.id.match(/\d/g).join("");
-    const $quantity = $button.value;
+
+    // Safety filter
+    var $input = $('#'+$button.id);
+    $input.val($input.val().replace(/\D/g, ''));
+
+    // Input limit
+    if ($input.val() > 10) {
+        $input.val(10);
+    } else if ($input.val() <= 0) {
+        $input.val(0);
+    }
+
+    const $quantity = $input.val();
 
     const $cartcount = document.getElementById("cartcount");
     const $items = document.getElementById("items");
@@ -42,7 +54,7 @@ function editQuantity($button) {
             // Set pricing
             $cartcount.textContent = $reply.totalQuantity;
             $subtotal.textContent = "\u20ac " + $reply.subTotal.toFixed(2);
-            $total.textContent = "\u20ac " + ($reply.subTotal + $shippingcost).toFixed(2);
+            $total.textContent = "\u20ac " + $reply.total.toFixed(2);
 
             // In case of input abuse
             if ($quantity > 10) {

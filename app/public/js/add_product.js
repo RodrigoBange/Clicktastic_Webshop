@@ -1,7 +1,8 @@
 function add_product($button_id) {
     // Get numbers of button ID
     var $id = $button_id.match(/\d/g).join("");
-    var $price = document.getElementById("price-" + $id).innerText.replace('€', '').replace('&euro;', '');
+    var $price = document.getElementById("price-" + $id).innerText.replace('€', '').
+    replace('&euro;', '').replace(' ', '');
     var $quantity = 1;
     var $cartcount = document.getElementById("cartcount");
 
@@ -20,7 +21,8 @@ function add_product($button_id) {
 function addProductWithQuantity($button_id) {
     // Get numbers of button ID
     var $id = $button_id.match(/\d/g).join("");
-    var $price = document.getElementById("price").innerText.replace('€', '').replace('&euro;', '');
+    var $price = document.getElementById("price").innerText.replace('€', '').
+    replace('&euro;', '').replace(' ', '');
     var $quantity = document.getElementById("inputQuantity").value;
     var $cartcount = document.getElementById("cartcount");
 

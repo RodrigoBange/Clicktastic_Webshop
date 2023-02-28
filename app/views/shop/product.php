@@ -12,6 +12,7 @@
         ?>
     </title>
     <script type="text/javascript" src="../../js/add_product.js"></script>
+    <script type="text/javascript" src="../../js/numeric_only_input.js"></script>
 </head>
 <body class="bg-light">
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -30,9 +31,10 @@
                     <span id="price">&euro; <?= htmlspecialchars($product->getPrice()) ?></span>
                 </div>
                 <p class="lead"><?= htmlspecialchars($product->getDescription()) ?></p>
+                <p>A maximum of 10 of this item is allowed per order.</p>
                 <div class="d-flex">
                     <input class="form-control text-center me-3" id="inputQuantity" type="number"
-                           value="1" min="1" max="10" style="max-width: 5rem" required>
+                           value="1" min="1" max="10" style="max-width: 5rem" onchange="onlyNumeric(this)" required>
                     <button class="btn btn-theme text-white flex-shrink-0" type="button"
                             id="btn-add-<?= $product->getId() ?>" onclick="addProductWithQuantity(this.id)">
                         <i class="fa fa-shopping-cart"></i>

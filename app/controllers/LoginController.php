@@ -9,11 +9,13 @@ class LoginController
 {
     private UserService $userService;
     private NavbarFunctions $navFunc;
+    private string $page;
 
     public function __construct()
     {
         $this->userService = new UserService();
         $this->navFunc = new NavbarFunctions();
+        $this->page = 'login';
     }
 
     /**
@@ -28,6 +30,7 @@ class LoginController
 
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Load the view
         require_once(__DIR__ . '/../views/login/login.php');
@@ -57,6 +60,7 @@ class LoginController
 
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Load the view
         require_once(__DIR__ . '/../views/login/signup.php');

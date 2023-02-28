@@ -13,6 +13,7 @@ class ManagementController
     private ProductService $productService;
     private OrderService $orderService;
     private NavbarFunctions $navFunc;
+    private string $page;
 
     public function __construct()
     {
@@ -21,6 +22,7 @@ class ManagementController
         $this->productService = new ProductService();
         $this->orderService = new OrderService();
         $this->navFunc = new NavbarFunctions();
+        $this->page = 'management';
     }
 
     /**
@@ -41,6 +43,7 @@ class ManagementController
 
         // Navigation Functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Load the view
         require_once(__DIR__ . "/../views/management/overview.php");

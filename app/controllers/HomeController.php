@@ -9,11 +9,13 @@ class HomeController
 {
     private ProductService $productService;
     private NavbarFunctions $navFunc;
+    private string $page;
 
     public function __construct()
     {
         $this->productService = new ProductService();
         $this->navFunc = new NavbarFunctions();
+        $this->page = 'home';
     }
 
     /**
@@ -26,6 +28,7 @@ class HomeController
 
         // Navigation functions
         $navFunc = $this->navFunc;
+        $page = $this->page;
 
         // Load the view
         require_once(__DIR__ . '/../views/home/index.php');

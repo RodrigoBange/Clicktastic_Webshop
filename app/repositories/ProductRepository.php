@@ -24,18 +24,6 @@ class ProductRepository extends Repository
         }
     }
 
-    public function getAllProducts(): array|null
-    {
-        try {
-            $stmt = $this->connection->prepare("SELECT * FROM products");
-            $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Product');
-            return $stmt->fetchAll();
-        } catch (Exception $e) {
-            return null;
-        }
-    }
-
     /**
      * Gets total product count
      */

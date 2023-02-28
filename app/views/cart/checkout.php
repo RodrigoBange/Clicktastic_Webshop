@@ -68,8 +68,8 @@
                             <label for="firstName">First name</label>
                             <input type="text" class="form-control" id="firstName" placeholder=""
                                    value="<?php
-                                            if (!empty ($user->first_name)) {
-                                                echo htmlspecialchars($user->first_name);
+                                            if (!empty ($user->getFirstName())) {
+                                                echo htmlspecialchars($user->getFirstName());
                                             } ?>"
                                    name="billingFirstName" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                         </div>
@@ -77,8 +77,8 @@
                             <label for="lastName">Last name</label>
                             <input type="text" class="form-control" id="lastName" placeholder=""
                                    value="<?php
-                                            if (!empty ($user->last_name)) {
-                                                echo htmlspecialchars($user->last_name);
+                                            if (!empty ($user->getLastName())) {
+                                                echo htmlspecialchars($user->getLastName());
                                             } ?>"
                                    name="billingLastName" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                         </div>
@@ -87,16 +87,16 @@
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email" placeholder="you@example.com"
                                name="billingEmail" value="<?php
-                                                            if (!empty($user->email)) {
-                                                                echo htmlspecialchars($user->email);
+                                                            if (!empty($user->getEmail())) {
+                                                                echo htmlspecialchars($user->getEmail());
                                                             } ?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="phone_number">Phone Number</label>
                         <input type="tel" class="form-control" id="phone_number" placeholder="+31 6 12345678"
                                name="billingPhoneNumber" value="<?php
-                                                    if (!empty($user->phone_number)) {
-                                                        echo htmlspecialchars($user->phone_number);
+                                                    if (!empty($user->getPhoneNumber())) {
+                                                        echo htmlspecialchars($user->getPhoneNumber());
                                                     }
                                                     ?>"
                                required>
@@ -106,8 +106,8 @@
                         <input type="text" class="form-control" id="address"
                                placeholder="Street address, P.O. box, company name" name="billingAddress"
                                value="<?php
-                               if (!empty($user->address)) {
-                                   echo htmlspecialchars($user->address);
+                               if (!empty($user->getAddress())) {
+                                   echo htmlspecialchars($user->getAddress());
                                }
                                ?>" required>
                     </div>
@@ -116,8 +116,8 @@
                         <input type="text" class="form-control" id="address2"
                                placeholder="Apartment, suite, unit, building, floor, etc." name="billingAddress2"
                                value="<?php
-                               if (!empty($user->address_optional)) {
-                                   echo htmlspecialchars($user->address_optional);
+                               if (!empty($user->getAddressOptional())) {
+                                   echo htmlspecialchars($user->getAddressOptional());
                                }
                                ?>" >
                     </div>
@@ -126,8 +126,8 @@
                         <input type="text" class="form-control" id="citytown" name="billingCity"
                                pattern="^[a-zA-Z][\sa-zA-Z]*"
                                value="<?php
-                               if (!empty($user->city)) {
-                                   echo htmlspecialchars($user->city);
+                               if (!empty($user->getCity())) {
+                                   echo htmlspecialchars($user->getCity());
                                }
                                ?>" required>
                     </div>
@@ -142,8 +142,8 @@
                             <input type="text" class="form-control" id="stateprovince" placeholder=""
                                    name="billingState" pattern="^[a-zA-Z][\sa-zA-Z]*"
                                    value="<?php
-                                            if (!empty($user->state)) {
-                                                echo htmlspecialchars($user->state);
+                                            if (!empty($user->getState())) {
+                                                echo htmlspecialchars($user->getState());
                                             }
                                             ?>" required>
                         </div>
@@ -151,8 +151,8 @@
                             <label for="zip">Zip</label>
                             <input type="text" class="form-control" id="zip" placeholder="" name="billingZip"
                                    value="<?php
-                                           if (!empty($user->postal_code)) {
-                                               echo htmlspecialchars($user->postal_code);
+                                           if (!empty($user->getPostalCode())) {
+                                               echo htmlspecialchars($user->getPostalCode());
                                            }
                                            ?>" required>
                         </div>

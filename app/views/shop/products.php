@@ -33,9 +33,9 @@
                         foreach ($companies as $company) {
                         ?>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="<?= $company[0] ?>"
+                                <input class="form-check-input" type="checkbox" value="<?= $company[0] ?>" name="brand"
                                        onclick="checkBoxChanged()">
-                                <label class="form-check-label" for="flexCheckDefault">
+                                <label class="form-check-label" for="brand">
                                     <?= $company[0] ?>
                                 </label>
                             </div>

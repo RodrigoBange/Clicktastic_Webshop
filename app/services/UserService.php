@@ -176,8 +176,9 @@ class UserService
             if ($result) {
                 // Update user with new database values
                 $_SESSION['user'] = serialize($this->getUser($user->getEmail()));
-                $_SESSION['display_name'] = $user->getFirstName();
-                $_SESSION['is_admin'] = $user->getIsAdmin();
+                $updatedUser = unserialize($_SESSION['user']);
+                $_SESSION['display_name'] = $updatedUser->getFirstName();
+                $_SESSION['is_admin'] = $updatedUser->getIsAdmin();
             }
         }
         return $result;
