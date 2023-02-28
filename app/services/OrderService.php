@@ -115,7 +115,13 @@ class OrderService
      */
     public function getOrdersByCustomerId(int $id): array|null
     {
-        return $this->orderRepository->getOrdersById($id);
+        $orders = $this->orderRepository->getOrdersById($id);
+
+        foreach ($orders as $order) {
+            $order->setProducts($this->getProductsOfOrder($order->getId()));
+        }
+
+        return $orders;
     }
 
     /**
@@ -123,6 +129,20 @@ class OrderService
      */
     public function getAllOrders(): bool|array|null
     {
-        return $this->orderRepository->getAllOrders();
+        $orders = $this->orderRepository->getAllOrders();
+
+        foreach ($orders as $order) {
+            $order->setProducts($this->getProductsOfOrder($order->getId()));
+        }
+
+        return $orders;
+    }
+
+    /**
+     * Gets all products of a specific order
+     */
+    public function getProductsOfOrder(int $id): array|null
+    {
+        return $this->orderRepository->getProductsOfOrder($id);
     }
 }

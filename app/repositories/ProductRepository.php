@@ -101,6 +101,9 @@ class ProductRepository extends Repository
         }
     }
 
+    /**
+     * Retrieves the top 3 newest products
+     */
     public function getNewestProducts(): array|null
     {
         try {
@@ -114,17 +117,16 @@ class ProductRepository extends Repository
         }
     }
 
-    public function getProductsOfOrder(int $id): bool|array|null
+    /**
+     * Retrieves all unique product company brands
+     */
+    public function getCompanies(): array|null
     {
         try {
-            $stmt = $this->connection->prepare("SELECT products.*, order_items.quantity FROM products INNER JOIN order_items 
-                                                ON products.id=order_items.product_id WHERE order_id = :id");
-            $stmt->bindParam(':id', $id);
+            $stmt = $this->connection->prepare("SELECT DISTINCT company FROM `products` ORDER BY company ASC");
             $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Product');
             return $stmt->fetchAll();
-        } catch (PDOException $e) {
-            error_log($e);
+        } catch (Exception $e) {
             return null;
         }
     }

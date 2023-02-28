@@ -93,12 +93,6 @@ class AccountController
         // Get all orders of user
         $orders = $this->orderService->getOrdersByCustomerId($user->getId());
 
-        // Get order items
-        foreach ($orders as $order) {
-            $products = $this->productService->getProductsOfOrder($order->getId());
-            $order->products[] = $products;
-        }
-
         // Navigation Functions
         $navFunc = $this->navFunc;
 

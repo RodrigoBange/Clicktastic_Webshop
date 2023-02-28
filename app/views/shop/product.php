@@ -41,6 +41,58 @@
                 </div>
             </div>
         </div>
+        <div class="container pt-5">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col" style="width: 20%;">Specifications</th>
+                    <th scope="col">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">Product name</th>
+                    <td class="flex-fill"><?= htmlspecialchars($product->getName()) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row">Company</th>
+                    <td><?= htmlspecialchars($product->getCompany()) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row">Layout</th>
+                    <td><?= htmlspecialchars($product->getLayout()) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row">Size</th>
+                    <td><?= htmlspecialchars($product->getSize()) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row">Amount of keys</th>
+                    <td><?= htmlspecialchars($product->getAmountKeys()) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row">Backlit</th>
+                    <td><?= htmlspecialchars($product->getBacklit()) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row">Color</th>
+                    <td><?= htmlspecialchars($product->getColor()) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row">Material</th>
+                    <td><?= htmlspecialchars($product->getMaterial()) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row">Switches</th>
+                    <td><?= htmlspecialchars($product->getSwitches()) ?></td>
+                </tr>
+                <tr>
+                    <th scope="row">Hot-swappable</th>
+                    <td><?= htmlspecialchars($product->isHotswap() ? 'Yes' : 'No') ?></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     <?php
     } else {
         ?>

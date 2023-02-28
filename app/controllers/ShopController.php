@@ -41,6 +41,9 @@ class ShopController
         // Fetch records based on the limit
         $productResults = $this->productService->getProductsByLimit($limit);
 
+        // Fetch all unique company names
+        $companies = $this->productService->getCompanies();
+
         // Navigation functions
         $navFunc = $this->navFunc;
 

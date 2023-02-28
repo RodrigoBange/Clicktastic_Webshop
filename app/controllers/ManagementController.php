@@ -33,17 +33,11 @@ class ManagementController
             return;
         }
 
-        // Get user information
+        // Get user information TODO: remove...
         $user = $this->userService->unserializeUser();
 
-        // Get all orders of user
+        // Get all orders
         $orders = $this->orderService->getAllOrders();
-
-        // Get order items
-        foreach ($orders as $order) {
-            $products = $this->productService->getProductsOfOrder($order->id);
-            $order->products[] = $products;
-        }
 
         // Navigation Functions
         $navFunc = $this->navFunc;

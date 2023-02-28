@@ -90,5 +90,21 @@ class OrderRepository extends Repository
         }
     }
 
-
+    /**
+     * Retrieves all products of a specific order
+     */
+    public function getProductsOfOrder(int $id): bool|array|null
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT products.*, order_items.quantity FROM products INNER JOIN order_items 
+                                                ON products.id=order_items.product_id WHERE order_id = :id");
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Product');
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            error_log($e);
+            return null;
+        }
+    }
 }

@@ -52,28 +52,72 @@ class ProductService
         } elseif (!empty($keywords) || !empty($filters)) { // If either or both is applied
             // Build query
             $query = $this->buildCountQuery($keywords, $filters);
-            return $this->productRepository->getProductCountByKeywords($query, $keywords);
+            $values = array_merge($keywords, $filters);
+            return $this->productRepository->getProductCountByKeywords($query, $values);
         }
     }
 
+    /**
+     * Builds a count query for products
+     */
     private function buildCountQuery($keywords, $filters): string
     {
         if (!empty($keywords) || !empty($filters)) {
             // Build query
             $query = "SELECT COUNT(*) as total FROM products WHERE ";
-            $query .= str_repeat(" name LIKE ? OR ", count($keywords));
-            $query = substr($query, 0, -4); // Remove final OR
+
+            if (!empty($keywords)) {
+                $query .= "(";
+                $query .= str_repeat(" name LIKE ? OR ", count($keywords));
+                $query = substr($query, 0, -4); // Remove final OR
+                $query .= " )";
+            }
+
+            if (!empty($keywords) && !empty($filters))
+            {
+                $query .= " AND ";
+            }
+
+            if (!empty($filters))
+            {
+                $query .= "(";
+                $query .= str_repeat(" company LIKE ? OR ", count($filters));
+                $query = substr($query, 0, -4); // Remove final OR
+                $query .= ")";
+            }
         }
         return $query;
     }
 
+    /**
+     * Builds a where query for products
+     */
     private function buildWhereQuery($keywords, $filters): ?string
     {
         if (!empty($keywords) || !empty($filters)) {
             // Build query
             $query = "SELECT * FROM products WHERE ";
-            $query .= str_repeat(" name LIKE ? OR ", count($keywords));
-            $query = substr($query, 0, -4); // Remove final OR
+
+            if (!empty($keywords)) {
+                $query .= "(";
+                $query .= str_repeat(" name LIKE ? OR ", count($keywords));
+                $query = substr($query, 0, -4); // Remove final OR
+                $query .= ")";
+            }
+
+            if (!empty($keywords) && !empty($filters))
+            {
+                $query .= " AND ";
+            }
+
+            if (!empty($filters))
+            {
+                $query .= "(";
+                $query .= str_repeat(" company LIKE ? OR ", count($filters));
+                $query = substr($query, 0, -4); // Remove final OR
+                $query .= ")";
+            }
+
             return $query;
         } else {
             return "SELECT * FROM products ";
@@ -181,11 +225,11 @@ class ProductService
     }
 
     /**
-     * Gets all products of a specific order
+     * Get all unique product company names
      */
-    public function getProductsOfOrder(int $id): array|null
+    public function getCompanies(): array|null
     {
-        return $this->productRepository->getProductsOfOrder($id);
+        return $this->productRepository->getCompanies();
     }
 
     /**
@@ -197,21 +241,9 @@ class ProductService
             // Configuration
             $offset = !empty($_POST['page'])?$_POST['page'] : 0;
             $limit = 6;
-            $keywords = array();
-            $filters = array();
-
-            // Search conditions
-            if (!empty($_POST['keywords'])) {
-                // Filter and explode sentence
-                $keywordsList = htmlspecialchars($_POST['keywords']);
-                $keywordsList = trim($keywordsList);
-                $keywords = preg_split('/\s+/', $keywordsList);
-
-                // Literal string
-                foreach ($keywords as $keyword => $value) {
-                    $keywords[$keyword] = "%" . $value . "%";
-                }
-            }
+            $filteredValues = $this->setupKeywordsAndFilters();
+            $keywords = $filteredValues[0];
+            $filters = $filteredValues[1];
 
             // Fetch records based on the offset and limit
             return $this->getProductsByOffsetLimit($keywords, $filters, $offset, $limit);
@@ -228,21 +260,9 @@ class ProductService
             $baseURL = __DIR__ . "/../views/shop/getproducts.php";
             $offset = !empty($_POST['page'])?$_POST['page'] : 0;
             $limit = 6;
-            $keywords = array();
-            $filters = array();
-
-            // Search conditions
-            if (!empty($_POST['keywords'])) {
-                // Filter and explode sentence
-                $keywordsList = htmlspecialchars($_POST['keywords']);
-                $keywordsList = trim($keywordsList);
-                $keywords = preg_split('/\s+/', $keywordsList);
-
-                // Literal string
-                foreach ($keywords as $keyword => $value) {
-                    $keywords[$keyword] = "%" . $value . "%";
-                }
-            }
+            $filteredValues = $this->setupKeywordsAndFilters();
+            $keywords = $filteredValues[0];
+            $filters = $filteredValues[1];
 
             // Count all records
             $rowCount = $this->getProductCount($keywords, $filters);
@@ -258,5 +278,43 @@ class ProductService
             );
             return new Pagination($pagConfig);
         }
+    }
+
+    /**
+     * Creates keywords and filter setup
+     */
+    private function setupKeywordsAndFilters(): array
+    {
+        // Configuration
+        $keywords = array();
+        $filters = array();
+
+        // Search conditions
+        if (!empty($_POST['keywords'])) {
+            // Filter and explode sentence
+            $keywordsList = htmlspecialchars($_POST['keywords']);
+            $keywordsList = trim($keywordsList);
+            $keywords = preg_split('/\s+/', $keywordsList);
+
+            // Literal string
+            foreach ($keywords as $keyword => $value) {
+                $keywords[$keyword] = "%" . $value . "%";
+            }
+        }
+
+        // Filter conditions
+        if (!empty($_POST['filters'])) {
+            // Filter and explode sentence
+            $filtersList = htmlspecialchars($_POST['filters']);
+            $filtersList = trim($filtersList);
+            $filters = explode('-', $filtersList);
+
+            // Literal string
+            foreach ($filters as $filter => $value) {
+                $filters[$filter] = "%" . $value . "%";
+            }
+        }
+
+        return array($keywords, $filters);
     }
 }

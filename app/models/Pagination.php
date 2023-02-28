@@ -7,27 +7,8 @@ class Pagination
     var $perPage = 10;
     var $numLinks = 3;
     var $currentPage = 0;
-    var $firstLink = '&lsaquo; First';
-    var $nextLink = '&gt;';
-    var $prevLink = '&lt;';
-    var $lastLink = 'Last &rsaquo;';
-    var $fullTagOpen = '<div class="pagination d-flex align-items-center">';
-    var $fullTagClose = '</div>';
-    var $firstTagOpen = '';
-    var $firstTagClose = '&nbsp;';
-    var $lastTagOpen = '&nbsp;';
-    var $lastTagClose = '';
-    var $curTagOpen = '&nbsp;<b>';
-    var $curTagClose = '</b>';
-    var $nextTagOpen = '&nbsp;';
-    var $nextTagClose = '&nbsp;';
-    var $prevTagOpen = '&nbsp;';
-    var $prevTagClose = '';
-    var $numTagOpen = '&nbsp;';
-    var $numTagClose = '';
     var $anchorClass = '';
     var $showCount = true;
-    var $contentDiv = '';
     var $additionalParam = '';
     var $link_func = '';
 
@@ -113,7 +94,7 @@ class Pagination
 
         // Render the first link
         if ($this->currentPage > $this->numLinks) {
-            $output .= $this->firstTagOpen . $this->getAJAXlink('', $this->firstLink) . $this->firstTagClose;
+            $output .= '' . $this->getAJAXlink('', '&lsaquo; First') . '&nbsp;';
         }
 
         // Render the previous link
@@ -122,7 +103,7 @@ class Pagination
             if ($i == 0) {
                 $i = '';
             }
-            $output .= $this->prevTagOpen . $this->getAJAXlink($i, $this->prevLink) . $this->prevTagClose;
+            $output .= '&nbsp;' . $this->getAJAXlink($i, '&lt;') . '';
         }
 
         // Write the digit links
@@ -131,38 +112,38 @@ class Pagination
 
             if ($i >= 0) {
                 if ($this->currentPage == $loop) {
-                    $output .= $this->curTagOpen.$loop.$this->curTagClose;
+                    $output .= '&nbsp;<b>'.$loop.'</b>';
                 } else {
                     $n = ($i == 0) ? '' : $i;
-                    $output .= $this->numTagOpen . $this->getAJAXlink($n, $loop) . $this->numTagClose;
+                    $output .= '&nbsp;' . $this->getAJAXlink($n, $loop) . '';
                 }
             }
         }
 
         // Render the next link
         if ($this->currentPage < $numPages) {
-            $output .= $this->nextTagOpen . $this->getAJAXlink($this->currentPage * $this->perPage, $this->nextLink)
-                .$this->nextTagClose;
+            $output .= '&nbsp;' . $this->getAJAXlink($this->currentPage * $this->perPage, '&gt;')
+                .'&nbsp;';
         }
 
         // Render the last link
         if (($this->currentPage + $this->numLinks) < $numPages) {
             $i = (($numPages * $this->perPage) - $this->perPage);
-            $output .= $this->lastTagOpen . $this->getAJAXlink($i, $this->lastLink) . $this->lastTagClose;
+            $output .= '&nbsp;' . $this->getAJAXlink($i, 'Last &rsaquo;') . '';
         }
 
         // Remove double slashes
         $output = preg_replace("#([^:])//+#", "\\1/", $output);
 
         // Add the wrapper HTML if it exists
-        $output = $this->fullTagOpen.$output.$this->fullTagClose;
+        $output = '<div class="pagination d-flex align-items-center">'.$output.'</div>';
 
         return $output;
     }
 
     function getAJAXlink($count, $text)
     {
-        if ($this->link_func == '' && $this->contentDiv == '') {
+        if ($this->link_func == '') {
             return '<a href="'.$this->baseURL . '?' . $count . '"' . $this->anchorClass . '>' . $text . '</a>';
         }
 
