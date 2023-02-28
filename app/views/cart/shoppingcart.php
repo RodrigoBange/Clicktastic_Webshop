@@ -3,7 +3,7 @@
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Your item overview</title>
-    <script type="text/javascript" src="../../js/editcart.js"></script>
+    <script type="text/javascript" src="../../js/edit_cart.js"></script>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -21,13 +21,13 @@
                             if (!empty($cartProducts)) {
                             foreach ($cartProducts as $cartProduct) {
                             ?>
-                                <div class="product pt-4 pb-4" id="product-<?= $cartProduct->id ?>">
+                                <div class="product pt-4 pb-4" id="product-<?= $cartProduct->getId() ?>">
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <a href="/shop/product?id=<?= $cartProduct->id ?>"
+                                            <a href="/shop/product?id=<?= $cartProduct->getId() ?>"
                                                class="img-fluid mx-auto d-block border">
                                                 <img class="img-fluid mx-auto d-block"
-                                                     src="../../images/<?= htmlspecialchars($cartProduct->image) ?>">
+                                                     src="../../images/<?= htmlspecialchars($cartProduct->getImage()) ?>">
                                             </a>
                                         </div>
                                         <div class="col-md-9">
@@ -35,27 +35,27 @@
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="product-name">
-                                                            <a href="/shop/product?id=<?= $cartProduct->id ?>"
+                                                            <a href="/shop/product?id=<?= $cartProduct->getId() ?>"
                                                                class="text-decoration-none text-black">
-                                                                <h5 class="mb-1"><?= $cartProduct->name ?></h5></a>
+                                                                <h5 class="mb-1"><?= $cartProduct->getName() ?></h5></a>
                                                             <div class="product-info">
                                                                 <div class="badge bg-theme mb-1"><span class="value">
-                                                                    <?= $cartProduct->company ?></span></div>
+                                                                    <?= $cartProduct->getCompany() ?></span></div>
                                                                 <div>Size: <span class="value">
-                                                                        <?= $cartProduct->size ?></span></div>
+                                                                        <?= $cartProduct->getSize() ?></span></div>
                                                                 <div>Color: <span class="text-bg-light">
-                                                                        <?= $cartProduct->color ?></span></div>
+                                                                        <?= $cartProduct->getColor() ?></span></div>
                                                                 <div>Switches: <span class="value">
-                                                                        <?= $cartProduct->switches ?></span></div>
+                                                                        <?= $cartProduct->getSwitches() ?></span></div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
                                                         <label for="quantity"><span>Quantity</span></label>
-                                                        <input id="quantity-<?= $cartProduct->id ?>" type="number"
+                                                        <input id="quantity-<?= $cartProduct->getId() ?>" type="number"
                                                            value ="<?php
                                                            // Get quantity
-                                                           echo $_SESSION['cart'][$cartProduct->id]['product_quantity'];
+                                                           echo $_SESSION['cart'][$cartProduct->getId()]['product_quantity'];
                                                            ?>" min="0" max="10" onchange="editQuantity(this)"
                                                                class="form-control quantity-input">
                                                     </div>
@@ -63,7 +63,7 @@
                                                         <h5 class="fw-semibold pt-4 mt-1">&euro;
                                                             <?php
                                                             // Get price * quantity
-                                                            echo number_format($cartProduct->price, 2);
+                                                            echo number_format($cartProduct->getPrice(), 2);
                                                             ?></h5>
                                                     </div>
                                                 </div>

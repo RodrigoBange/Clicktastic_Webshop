@@ -30,14 +30,14 @@
                     ?>
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>
-                                <h6 class="my-0"><?= htmlspecialchars($cartProduct->name); ?></h6>
+                                <h6 class="my-0"><?= htmlspecialchars($cartProduct->getName()); ?></h6>
                                 <small class="text-muted">Quantity:
-                                    <?= $_SESSION['cart'][$cartProduct->id]['product_quantity'] ?>x
+                                    <?= $_SESSION['cart'][$cartProduct->getId()]['product_quantity'] ?>x
                                 </small>
-                                <small class="text-muted">&euro; <?= $cartProduct->price ?></small>
+                                <small class="text-muted">&euro; <?= $cartProduct->getPrice() ?></small>
                             </div>
                             <span class="text-muted">&euro;
-                                <?= number_format($cartProduct->price * $_SESSION['cart'][$cartProduct->id]['product_quantity'], 2);
+                                <?= number_format($cartProduct->getPrice() * $_SESSION['cart'][$cartProduct->getId()]['product_quantity'], 2);
                                 ?></span>
                         </li>
                     <?php

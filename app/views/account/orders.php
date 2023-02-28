@@ -3,7 +3,6 @@
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Checkout</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -33,7 +32,7 @@
                         <div class="col-md-2 mb-3">
                             <label for="lastName">Shipped to</label>
                             <h6><strong><?php
-                                    echo htmlspecialchars($user->first_name) . " " . htmlspecialchars($user->last_name)
+                                    echo htmlspecialchars($user->getFirstName()) . " " . htmlspecialchars($user->getLastName())
                                     ?></strong></h6>
                         </div>
                     </div>
@@ -44,15 +43,15 @@
                         foreach ($order->products as $product) {
                             foreach ($product as $item) {
                             ?>
-                            <a href="/shop/product?id=<?php echo htmlspecialchars($item->id) ?>"
+                            <a href="/shop/product?id=<?= htmlspecialchars($item->getId()) ?>"
                                class="list-group-item d-flex lh-condensed text-decoration-none mb-3">
                                 <img class="w-25 border"
-                                     src="<?php echo htmlspecialchars($item->image) ?>" alt="keyboard">
+                                     src="<?= htmlspecialchars($item->getImage()) ?>" alt="keyboard">
                                 <div class="col-sm-5 col-1 p-4 pt-0">
-                                    <h5><strong><?php echo htmlspecialchars($item->name) ?></strong></h5>
-                                    <h6>&euro;<?php echo htmlspecialchars($item->price) ?></h6>
+                                    <h5><strong><?= htmlspecialchars($item->getName()) ?></strong></h5>
+                                    <h6>&euro;<?= number_format($item->getPrice(),2) ?></h6>
                                     <small class="col-sm-2 col-12">Quantity:
-                                        <?php echo htmlspecialchars($item->quantity) ?></small>
+                                        <?= $item->getQuantity() ?></small>
                                 </div>
                             </a>
                         <?php

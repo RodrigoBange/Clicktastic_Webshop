@@ -23,28 +23,28 @@
                         <div class="col-md-6 mb-3">
                             <label for="firstName">First name</label>
                             <input type="text" class="form-control" id="firstName"
-                                   placeholder="" value="<?= htmlspecialchars($user->first_name)?>"
+                                   placeholder="" value="<?= htmlspecialchars($user->getFirstName())?>"
                                    name="firstName" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="lastName">Last name</label>
                             <input type="text" class="form-control" id="lastName" placeholder=""
-                                   value="<?= htmlspecialchars($user->last_name)?>"
+                                   value="<?= htmlspecialchars($user->getLastName())?>"
                                    name="lastName" pattern="^[a-zA-Z][\sa-zA-Z]*" required>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="email">Email (Can't be changed)</label>
                         <input type="email" class="form-control" id="email"
-                               placeholder="<?= htmlspecialchars($user->email) ?>"
+                               placeholder="<?= htmlspecialchars($user->getEmail()) ?>"
                                name="email" disabled>
                     </div>
                     <div class="mb-3">
                         <label for="phone_number">Phone Number</label>
                         <input type="tel" class="form-control" id="phone_number"
                                placeholder="+31 6 12345678" value="<?php
-                                                                    if (!empty($user->phone_number)) {
-                                                                        echo htmlspecialchars($user->phone_number);
+                                                                    if (!empty($user->getPhoneNumber())) {
+                                                                        echo htmlspecialchars($user->getPhoneNumber());
                                                                     }
                                                                     ?>"
                                name="phoneNumber">
@@ -56,8 +56,8 @@
                         <input type="text" class="form-control" id="address"
                                placeholder="Street address, P.O. box, company name" name="address"
                                value="<?php
-                                       if (!empty($user->address)) {
-                                           echo htmlspecialchars($user->address);
+                                       if (!empty($user->getAddress())) {
+                                           echo htmlspecialchars($user->getAddress());
                                        }
                                        ?>">
                     </div>
@@ -66,8 +66,8 @@
                         <input type="text" class="form-control" id="address2"
                                placeholder="Apartment, suite, unit, building, floor, etc." name="address2"
                         value="<?php
-                                if (!empty($user->phone_number)) {
-                                    echo htmlspecialchars($user->address_optional);
+                                if (!empty($user->getPhoneNumber())) {
+                                    echo htmlspecialchars($user->getAddressOptional());
                                 }
                                 ?>">
                     </div>
@@ -75,8 +75,8 @@
                         <label for="citytown">City / Town</label>
                         <input type="text" class="form-control" id="citytown" name="city" pattern="^[a-zA-Z][\sa-zA-Z]*"
                                value="<?php
-                                       if (!empty($user->city)) {
-                                           echo htmlspecialchars($user->city);
+                                       if (!empty($user->getCity())) {
+                                           echo htmlspecialchars($user->getCity());
                                        }
                                        ?>">
                     </div>
@@ -91,8 +91,8 @@
                             <input type="text" class="form-control" id="stateprovince" placeholder=""
                                    name="state" pattern="^[a-zA-Z][\sa-zA-Z]*"
                                    value="<?php
-                                           if (!empty($user->state)) {
-                                               echo htmlspecialchars($user->state);
+                                           if (!empty($user->getState())) {
+                                               echo htmlspecialchars($user->getState());
                                            }
                                            ?>">
                         </div>
@@ -100,8 +100,8 @@
                             <label for="zip">Zip</label>
                             <input type="text" class="form-control" id="zip" placeholder="" name="zip"
                                    value="<?php
-                                           if (!empty($user->postal_code)) {
-                                               echo htmlspecialchars($user->postal_code);
+                                           if (!empty($user->getPostalCode())) {
+                                               echo htmlspecialchars($user->getPostalCode());
                                            }
                                            ?>" >
                         </div>

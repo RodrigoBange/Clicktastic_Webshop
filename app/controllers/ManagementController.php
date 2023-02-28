@@ -5,7 +5,7 @@ require_once(__DIR__ . '/../services/ProductService.php');
 require_once(__DIR__ . '/../services/OrderService.php');
 
 // Model
-require_once(__DIR__ . "/../models/NavbarFunctions.php");
+require_once(__DIR__ . '/../models/NavbarFunctions.php');
 
 class ManagementController
 {
@@ -28,11 +28,13 @@ class ManagementController
      */
     public function overview() : void
     {
-        // Service
-        $productService = $this->productService;
+        if (!isset($_SESSION['is_admin']) || !$_SESSION['is_admin']) {
+            header("location: /login/login");
+            return;
+        }
 
         // Get user information
-        $user = $this->userService->getUser($_SESSION['email']);
+        $user = $this->userService->unserializeUser();
 
         // Get all orders of user
         $orders = $this->orderService->getAllOrders();
@@ -47,6 +49,6 @@ class ManagementController
         $navFunc = $this->navFunc;
 
         // Load the view
-        require_once(__DIR__ . "/../views/account/orders.php");
+        require_once(__DIR__ . "/../views/management/overview.php");
     }
 }

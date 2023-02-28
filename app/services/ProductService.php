@@ -18,7 +18,7 @@ class ProductService
     /**
      * Retrieves a product by ID.
      */
-    public function getProductById(int $id)
+    public function getProductById(int $id): ?Product
     {
         // Return product by ID
         $product = $this->productRepository->getProductById($id);

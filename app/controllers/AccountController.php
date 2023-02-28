@@ -87,18 +87,15 @@ class AccountController
             return;
         }
 
-        // Service
-        $productService = $this->productService;
-
         // Get user object
         $user = $this->userService->unserializeUser();
 
         // Get all orders of user
-        $orders = $this->orderService->getOrdersByCustomerId($user->id);
+        $orders = $this->orderService->getOrdersByCustomerId($user->getId());
 
         // Get order items
         foreach ($orders as $order) {
-            $products = $this->productService->getProductsOfOrder($order->id);
+            $products = $this->productService->getProductsOfOrder($order->getId());
             $order->products[] = $products;
         }
 
@@ -116,8 +113,8 @@ class AccountController
         // Get user object
         $user = $this->userService->unserializeUser();
 
-        if (isset($user->country)) {
-            echo json_encode(htmlspecialchars($user->country));
+        if ($user->getCountry() !== null) {
+            echo json_encode(htmlspecialchars($user->getCountry()));
         } else {
             echo json_encode(null);
         }

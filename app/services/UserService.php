@@ -21,18 +21,12 @@ class UserService
             $user = $this->userRepository->getUser($_POST['email']);
 
             if ($user != null) { // Attempt to log user in
-                if (password_verify($_POST['password'], $user->password)) {
+                if (password_verify($_POST['password'], $user->getPassword())) {
                     // Save user to session
                     $_SESSION['user'] = serialize($user);
                     // Set quick access values
-                    $_SESSION['display_name'] = $user->first_name;
-                    $_SESSION['is_admin'] = $user->is_admin;
-
-                    // Save values to session
-                    //$_SESSION['logged_in'] = true;
-                    //$_SESSION['name'] = $user->first_name;
-                    //$_SESSION['email'] = $user->email;
-                    //$_SESSION['is_admin'] = $user->is_admin;
+                    $_SESSION['display_name'] = $user->getFirstName();
+                    $_SESSION['is_admin'] = $user->getIsAdmin();
                     return true;
                 }
             }
@@ -172,7 +166,7 @@ class UserService
                 'postal_code' => $_POST['zip'],
                 'country' => $_POST['country'],
                 'phone_number' => $_POST['phoneNumber'],
-                'email' => $user->email
+                'email' => $user->getEmail()
             );
 
             // Attempt to update
@@ -181,9 +175,9 @@ class UserService
             // If successful, update information
             if ($result) {
                 // Update user with new database values
-                $_SESSION['user'] = serialize($this->getUser($user->email));
-                $_SESSION['display_name'] = $user->first_name;
-                $_SESSION['is_admin'] = $user->is_admin;
+                $_SESSION['user'] = serialize($this->getUser($user->getEmail()));
+                $_SESSION['display_name'] = $user->getFirstName();
+                $_SESSION['is_admin'] = $user->getIsAdmin();
             }
         }
         return $result;
@@ -192,10 +186,10 @@ class UserService
     /**
      * Unserializes the user session value to a user object
      */
-    public function unserializeUser()
+    public function unserializeUser(): User|null
     {
         if (!isset($_SESSION['user'])) {
-            return;
+            return null;
         } else {
             // Deserialize to object
             return unserialize($_SESSION['user']);

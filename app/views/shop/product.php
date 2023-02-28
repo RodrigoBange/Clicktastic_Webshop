@@ -5,7 +5,7 @@
     <title>
         <?php
         if ($product != null) {
-            echo htmlspecialchars($product->name);
+            echo htmlspecialchars($product->getName());
         } else {
             echo "Product not found.";
         }
@@ -22,19 +22,19 @@
     ?>
         <div class="row gx-4 gx-lg-5 align-items-center">
             <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0"
-                                       src="../../images/<?= htmlspecialchars($product->image) ?>" alt="keyboard"></div>
+                                       src="../../images/<?= htmlspecialchars($product->getImage()) ?>" alt="keyboard"></div>
             <div class="col-md-6">
-                <div class="small mb-1">SKU: <?= $product->id ?></div>
-                <h1 class="display-5 fw-bolder"><?= htmlspecialchars($product->name) ?></h1>
+                <div class="small mb-1">SKU: <?= $product->getId() ?></div>
+                <h1 class="display-5 fw-bolder"><?= htmlspecialchars($product->getName()) ?></h1>
                 <div class="fs-5 mb-5">
-                    <span id="price">&euro; <?= htmlspecialchars($product->price) ?></span>
+                    <span id="price">&euro; <?= htmlspecialchars($product->getPrice()) ?></span>
                 </div>
-                <p class="lead"><?= htmlspecialchars($product->description) ?></p>
+                <p class="lead"><?= htmlspecialchars($product->getDescription()) ?></p>
                 <div class="d-flex">
                     <input class="form-control text-center me-3" id="inputQuantity" type="number"
                            value="1" min="1" max="10" style="max-width: 5rem" required>
                     <button class="btn btn-theme text-white flex-shrink-0" type="button"
-                            id="btn-add-<?= $product->id ?>" onclick="addProductWithQuantity(this.id)">
+                            id="btn-add-<?= $product->getId() ?>" onclick="addProductWithQuantity(this.id)">
                         <i class="fa fa-shopping-cart"></i>
                         Add to cart
                     </button>

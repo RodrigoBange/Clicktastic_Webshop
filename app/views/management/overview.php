@@ -1,15 +1,8 @@
-<?php
-if (!isset($_SESSION['logged_in']) || !$_SESSION['is_admin']) {
-    header("location: /login/login");
-    exit();
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <?php include_once(__DIR__ . '/../generalheadinfo.php'); ?>
     <title>Admin overview</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.6.0/cleave.min.js"></script>
 </head>
 <body>
 <?php include_once(__DIR__ . '/../navbar.php'); ?>
@@ -46,23 +39,21 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['is_admin']) {
                     <div class="mb-3">
                         <label class="mb-3">Products</label>
                         <?php
-                        $count = 0;
                         foreach ($order->products as $product) {
                             foreach ($product as $item) {
                                 ?>
-                                <a href="/shop/product?id=<?= htmlspecialchars($item->id) ?>"
+                                <a href="/shop/product?id=<?= htmlspecialchars($item->getId()) ?>"
                                    class="list-group-item d-flex lh-condensed text-decoration-none mb-3">
                                     <img class="w-25 border"
-                                         src="../../images/<?= htmlspecialchars($item->image) ?>" alt="keyboard">
+                                         src="../../images/<?= htmlspecialchars($item->getImage()) ?>" alt="keyboard">
                                     <div class="col-sm-5 col-1 p-4 pt-0">
-                                        <h5><strong><?= htmlspecialchars($item->name) ?></strong></h5>
-                                        <h6>&euro;<?= htmlspecialchars($item->price) ?></h6>
+                                        <h5><strong><?= htmlspecialchars($item->getName()) ?></strong></h5>
+                                        <h6>&euro;<?= number_format($item->getPrice(), 2) ?></h6>
                                         <small class="col-sm-2 col-12">Quantity:
-                                            <?= htmlspecialchars($item->quantity) ?></small>
+                                            <?= $item->getQuantity() ?></small>
                                     </div>
                                 </a>
                                 <?php
-                                $count += 1;
                             }
                         }
                         ?>
