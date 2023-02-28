@@ -61,7 +61,7 @@ class OrderRepository extends Repository
         try {
             $stmt = $this->connection->prepare("SELECT id, order_date, address,
             address_optional, city, state, postal_code, country, phone_number, total
-            FROM orders WHERE customer_id = :id");
+            FROM orders WHERE customer_id = :id ORDER BY id DESC");
             $stmt->bindParam(':id', $customerId);
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_CLASS, 'Order');
@@ -80,7 +80,7 @@ class OrderRepository extends Repository
         try {
             $stmt = $this->connection->prepare("SELECT id, order_date, address,
             address_optional, city, state, postal_code, country, phone_number, total
-            FROM orders");
+            FROM orders ORDER BY id DESC");
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_CLASS, 'Order');
             return $stmt->fetchAll();
